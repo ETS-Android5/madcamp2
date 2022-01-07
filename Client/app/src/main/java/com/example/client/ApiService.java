@@ -16,8 +16,9 @@ public interface ApiService {
     Call<ResponseBody> getFunc(@Query("data") String data);
 
     @FormUrlEncoded
-    @POST("/retrofit/post")
-    Call<ResponseBody> postFunc(@Field("data") String data);
+    @POST("/rest-auth/registration/")
+    Call<LoginDataClass> postFunc(@Field("username") String name, @Field("email") String email,
+                                  @Field("password1") String password1, @Field("password2") String password2);
 
     @FormUrlEncoded
     @PUT("/retrofit/put/{id}")
