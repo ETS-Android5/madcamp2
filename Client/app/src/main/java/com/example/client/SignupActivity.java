@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -20,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Path;
 
 public class SignupActivity extends AppCompatActivity {
-    private final String URL = "http://192.168.0.55/";
+    private final String URL = "http://192.168.0.55:80/";
 
     private Retrofit retrofit;
     private ApiService service;
@@ -48,27 +49,26 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Call<LoginDataClass> call_post = service.postFunc("user1","user1@gmail.com","1234","1234");
-                call_post.enqueue(new Callback<LoginDataClass>() {
-                    @Override
-                    public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
-                        if (response.isSuccessful()) {
-                            try {
-                                String result = response.body().toString();
-                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "error = " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                HashMap<String, Object> input = new HashMap<>();
+                input.put("username","user1");
+                input.put("email", "user1@gmail.com");
+                input.put("password1","1234");
+                input.put("password2","1234");
 
-                    @Override
-                    public void onFailure(Call<LoginDataClass> call, Throwable t) {
-                        Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
+               service.postFunc(input).enqueue(new Callback<LoginDataClass>() {
+                   @Override
+                   public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
+                       if(response.isSuccessful()){
+                           LoginDataClass data = response.body();
+                       }
+                   }
+
+                   @Override
+                   public void onFailure(Call<LoginDataClass> call, Throwable t) {
+
+                   }
+               });
+
             }
         });
     }

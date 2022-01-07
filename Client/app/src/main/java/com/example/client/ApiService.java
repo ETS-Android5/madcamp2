@@ -1,9 +1,12 @@
 package com.example.client;
 
+import java.util.HashMap;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -17,8 +20,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/rest-auth/registration/")
-    Call<LoginDataClass> postFunc(@Field("username") String name, @Field("email") String email,
-                                  @Field("password1") String password1, @Field("password2") String password2);
+    Call<LoginDataClass> postFunc(@FieldMap HashMap<String, Object> param);
 
     @FormUrlEncoded
     @PUT("/retrofit/put/{id}")
