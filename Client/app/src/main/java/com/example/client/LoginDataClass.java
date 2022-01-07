@@ -1,11 +1,16 @@
 package com.example.client;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LoginDataClass {
 
-
+    @SerializedName("username")
     private String username;
+    @SerializedName("email")
     private String email;
+    @SerializedName("password1")
     private String password1;
+    @SerializedName("password2")
     private String password2;
 
     public String getUsername() {

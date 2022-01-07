@@ -1,8 +1,10 @@
 package com.example.client;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private View drawerView;
-    private Button button;
+    private Button openMenuButton;
     private Button toLogin;
 
 
@@ -58,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         drawerView = (View) findViewById((R.id.drawerView));
         drawerLayout.setDrawerListener(listener);
 
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        openMenuButton = (Button) findViewById(R.id.open_menu_button);
+        openMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
