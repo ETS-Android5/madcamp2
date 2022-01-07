@@ -1,113 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/signup_username"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/signUpTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
+        android:text="회원가입"
+        android:textSize="30dp"
+        android:layout_marginTop="100dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView" />
+        />
+
+    <ImageView
+        android:id="@+id/idImageView"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/login_username"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/signUpTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <EditText
-        android:id="@+id/signup_password"
+        android:id="@+id/signup_usernameEdit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="@+id/signup_username"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintStart_toStartOf="@+id/signup_username"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        android:inputType="text"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:hint="username"
+        app:layout_constraintBottom_toBottomOf="@id/idImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/idImageView"
+        app:layout_constraintTop_toTopOf="@id/idImageView" />
+
+    <ImageView
+        android:id="@+id/emailImageView"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/ic_baseline_mail_outline_24"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/idImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/singup_emailEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:hint="email"
+        app:layout_constraintBottom_toBottomOf="@id/emailImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/emailImageView"
+        app:layout_constraintTop_toTopOf="@id/emailImageView" />
+
+    <ImageView
+        android:id="@+id/passwordImageView"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/login_password"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/emailImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/singup_passwordEdit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:hint="password"
+        app:layout_constraintBottom_toBottomOf="@id/passwordImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/passwordImageView"
+        app:layout_constraintTop_toTopOf="@id/passwordImageView" />
+
+    <ImageView
+        android:id="@+id/passwordImageView2"
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/login_password"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/passwordImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <EditText
+        android:id="@+id/singup_passwordEdit2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="30dp"
+        android:hint="password check"
+        app:layout_constraintBottom_toBottomOf="@id/passwordImageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/passwordImageView2"
+        app:layout_constraintTop_toTopOf="@id/passwordImageView2" />
 
     <Button
         android:id="@+id/signup_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
         android:text="회원가입"
-        app:layout_constraintBottom_toTopOf="@+id/to_signup_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_password" />
+        app:layout_constraintTop_toBottomOf="@id/passwordImageView2" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="17dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/signup_password"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:srcCompat="@drawable/login_password" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="28dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/find_information_button"
-        app:layout_constraintEnd_toEndOf="@+id/imageView2"
-        app:layout_constraintEnd_toStartOf="@+id/signup_username"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/login_username" />
-
-    <Button
-        android:id="@+id/to_signup_button"
+    <TextView
+        android:id="@+id/signup_debugText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="회원가입"
-        app:layout_constraintBottom_toBottomOf="@+id/find_information_button"
+        android:text="What Happen?"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/signup_button"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/find_information_button"
-        app:layout_constraintTop_toTopOf="@+id/find_information_button" />
-
-    <Button
-        android:id="@+id/find_information_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="아이디/비밀번호 찾기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/to_signup_button"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <EditText
-        android:id="@+id/password2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="password2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="email"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password2" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
