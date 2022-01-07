@@ -15,9 +15,8 @@
     </style>
 
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@android:color/background_dark</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">true</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">true</item>
 

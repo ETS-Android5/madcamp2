@@ -3,6 +3,8 @@ package com.example.client;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,16 +31,24 @@ public class SignupActivity extends AppCompatActivity {
     private Button signup;
     private EditText username;
     private EditText password;
+    private EditText password2;
+    private EditText email;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window w = getWindow();
+        w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_signup);
 
         signup = (Button) findViewById(R.id.signup_button);
         username = (EditText) findViewById(R.id.signup_username);
         password = (EditText) findViewById(R.id.signup_password);
+        password2 = (EditText) findViewById(R.id.password2);
+        email = (EditText) findViewById(R.id.email);
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -50,16 +60,19 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 HashMap<String, Object> input = new HashMap<>();
-                input.put("username","user1");
-                input.put("email", "user1@gmail.com");
-                input.put("password1","1234");
-                input.put("password2","1234");
+                input.put("username",username.getText().toString());
+                input.put("email", email.getText().toString());
+                input.put("password1",password.getText().toString());
+                input.put("password2",password2.getText().toString());
 
                service.postFunc(input).enqueue(new Callback<LoginDataClass>() {
                    @Override
                    public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
                        if(response.isSuccessful()){
-                           LoginDataClass data = response.body();
+
+                       }
+                       else{
+
                        }
                    }
 
