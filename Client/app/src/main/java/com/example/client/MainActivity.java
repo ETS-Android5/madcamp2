@@ -30,27 +30,30 @@ import net.daum.mf.map.api.MapView;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import retrofit2.Retrofit;
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private View drawerView;
     private Button button;
+    private Button toLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Window w = getWindow();
-
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        w.setNavigationBarColor(Color.BLACK);
         setContentView(R.layout.activity_main);
 
         MapView mapView = new MapView(this);
-
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
-        getHashKey();
+
+        //getHashKey();
+
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
         drawerLayout.setDrawerListener(listener);
@@ -59,10 +62,12 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 drawerLayout.openDrawer(drawerView);
             }
         });
     }
+
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -70,6 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
+            toLogin = (Button) findViewById(R.id.to_login);
+            toLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent_to_login);
+
+                }
+            });
         }
 
         @Override
@@ -102,26 +116,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-    public static boolean isUseBottomNavigation(Context context) {
-        int id = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
-        boolean useSoftNavigation = context.getResources().getBoolean(id);
-        return useSoftNavigation;
-    }
-
-    public static int getBottomNavigationHeight(Context context) {
-        int bottomNavigation = 0;
-        int screenSizeType = (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK);
-        if(screenSizeType != Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-            //태블릿 예외처리
-            int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-            bottomNavigation = context.getResources().getDimensionPixelSize(resourceId);
-            }
-        }
-        if (!isUseBottomNavigation(context)) bottomNavigation = 0;
-        return bottomNavigation;
-    }
-
 
 }

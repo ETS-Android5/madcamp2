@@ -7,6 +7,8 @@
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
     </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET">
+    </uses-permission>
 
 
 
@@ -17,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/FullScreenTheme"
+        android:usesCleartextTraffic="true"
         android:networkSecurityConfig="@xml/network_security_config">
 
         <activity
@@ -30,6 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+        </activity>
+
+        <activity
+            android:name=".LoginActivity">
+        </activity>
+        <activity
+            android:name=".SignupActivity">
         </activity>
 
             <meta-data

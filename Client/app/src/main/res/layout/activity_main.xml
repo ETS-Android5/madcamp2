@@ -78,7 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/drawerlayout">
+        app:menu="@menu/drawerlayout"
+        app:headerLayout="@layout/main_header">
 
     </com.google.android.material.navigation.NavigationView>
 
