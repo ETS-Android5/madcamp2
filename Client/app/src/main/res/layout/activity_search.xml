@@ -2,15 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:background="@color/white_comfortable"
-    android:layout_height="match_parent">
+    android:layout_height="710dp"
+    android:background="@color/white_comfortable">
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:layout_marginTop="40dp"
 
+        android:layout_marginTop="40dp"
         android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -28,7 +30,7 @@
             android:background="@drawable/edittext_round_corner_withstroke"
             android:ems="10"
             app:iconifiedByDefault="false"
-            app:searchIcon="@null"/>
+            app:searchIcon="@null" />
 
         <Button
             android:id="@+id/open_menu_button"
@@ -60,5 +62,14 @@
         </FrameLayout>
 
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

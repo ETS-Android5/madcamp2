@@ -2,12 +2,15 @@ package com.example.client;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -31,6 +34,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import net.daum.android.map.MapViewEventListener;
@@ -42,6 +46,8 @@ import net.daum.mf.map.api.MapView;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Retrofit;
 
@@ -54,6 +60,14 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private Button toLogin;
     private Button search;
     private String pointAdress;
+
+    public static final int MULTIPLE_PERMISSIONS = 1801;
+    private String[] permissions = {
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE
+    };
     MapReverseGeoCoder reverseGeoCoder;
 
     @Override
@@ -64,17 +78,23 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
 
+        checkPermissions();
+
+
         MapView mapView = new MapView(this);
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+
 
         mapView.setMapViewEventListener(this);
         mapView.setPOIItemEventListener(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setShowCurrentLocationMarker(true);
 
+        mapView.setShowCurrentLocationMarker(true);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         mapViewContainer.addView(mapView);
+
+
         //getHashKey();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
@@ -132,6 +152,26 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         }
     };
 
+
+    private boolean checkPermissions() {
+        int result;
+        List<String> permissionList = new ArrayList<>();
+        for (String pm : permissions) {
+            result = ContextCompat.checkSelfPermission(this, pm);
+
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                permissionList.add(pm);
+            }
+        }
+
+        if (!permissionList.isEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
+
     private void getHashKey() {
         PackageInfo packageInfo = null;
         try {
@@ -154,6 +194,37 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     }
 
+    private void showNoPermissionToastAndFinish() {
+
+        Toast toast = Toast.makeText(this, "권한 요청에 동의 해주셔야 이용 가능합니다. 설정에서 권한 허용 하시기 바랍니다.", Toast.LENGTH_SHORT);
+        toast.show();
+
+        finish();
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MULTIPLE_PERMISSIONS: {
+                boolean isDeny = false;
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < permissions.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            //permission denyed
+                            isDeny = true;
+                        }
+                    }
+                }
+
+                if (isDeny) {
+                    showNoPermissionToastAndFinish();
+                }
+            }
+        }
+    }
+
     @Override
     public void onMapViewInitialized(MapView mapView) {
         Log.i("디테일로그", "onMapViewInitialized");
@@ -172,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
         Log.i("디테일로그", "onMapViewSingleTapped");
+        mapView.removeAllPOIItems();
     }
 
     @Override
@@ -181,14 +253,19 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
-        MapPOIItem marker = new MapPOIItem();
-        marker.setItemName("Default Marker");
-        marker.setTag(0);
-        marker.setMapPoint(mapPoint);
-        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
-        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+        MapPOIItem customMarker = new MapPOIItem();
+        customMarker.setItemName("Custom Marker");
+        customMarker.setTag(1);
+        customMarker.setMapPoint(mapPoint);
+        customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+        customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+        customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+        customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+        customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+        customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
 
-        mapView.addPOIItem(marker);
+        mapView.removeAllPOIItems();
+        mapView.addPOIItem(customMarker);
 
         MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, mapPoint, this, this );
         mapGeoCoder.startFindingAddress( );
@@ -211,6 +288,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+        MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, mapPOIItem.getMapPoint(), this, this );
+        mapGeoCoder.startFindingAddress( );
     }
 
     @Override
@@ -223,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
 
+
     }
 
     @Override
@@ -232,7 +312,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-        MapPoint.GeoCoordinate mapPointGeo = mapPoint.getMapPointGeoCoord();
+
     }
 
     @Override
@@ -275,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         }
         return super.dispatchTouchEvent(ev);
     }
+
 
 
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
