@@ -7,10 +7,6 @@
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
     </uses-permission>
-    <uses-permission android:name="android.permission.INTERNET">
-    </uses-permission>
-
-
 
     <application
         android:allowBackup="true"
@@ -31,17 +27,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-
-        <activity
-            android:name=".LoginActivity">
         </activity>
         <activity
-            android:name=".SignupActivity">
+            android:name=".LoginActivity"
+            android:exported="true">
         </activity>
-
-            <meta-data
+        <activity
+            android:name=".SignupActivity"
+            android:exported="true">
+        </activity>
+        <meta-data
                 android:name="com.naver.maps.map.CLIENT_ID"
                 android:value="610mz80mr9" />
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="002448364a9b04e2bdfdad9d74c9ce5a"/>

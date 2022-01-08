@@ -43,6 +43,17 @@
         app:layout_constraintStart_toEndOf="@id/idImageView"
         app:layout_constraintTop_toTopOf="@id/idImageView" />
 
+    <TextView
+        android:id="@+id/signup_usernameDanger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/danger"
+        app:layout_constraintTop_toBottomOf="@id/signup_usernameEdit"
+        app:layout_constraintStart_toStartOf="@id/signup_usernameEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        />
+
     <ImageView
         android:id="@+id/emailImageView"
         android:layout_width="30dp"
@@ -66,6 +77,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/emailImageView"
         app:layout_constraintTop_toTopOf="@id/emailImageView" />
+
+    <TextView
+        android:id="@+id/signup_emailDanger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/danger"
+        app:layout_constraintTop_toBottomOf="@id/singup_emailEdit"
+        app:layout_constraintStart_toStartOf="@id/singup_emailEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        />
 
     <ImageView
         android:id="@+id/passwordImageView"
@@ -91,6 +113,17 @@
         app:layout_constraintStart_toEndOf="@id/passwordImageView"
         app:layout_constraintTop_toTopOf="@id/passwordImageView" />
 
+    <TextView
+        android:id="@+id/signup_pwDanger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/danger"
+        app:layout_constraintTop_toBottomOf="@id/singup_passwordEdit"
+        app:layout_constraintStart_toStartOf="@id/singup_passwordEdit"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        />
+
     <ImageView
         android:id="@+id/passwordImageView2"
         android:layout_width="30dp"
@@ -115,6 +148,17 @@
         app:layout_constraintStart_toEndOf="@id/passwordImageView2"
         app:layout_constraintTop_toTopOf="@id/passwordImageView2" />
 
+    <TextView
+        android:id="@+id/signup_pw2Danger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/danger"
+        app:layout_constraintTop_toBottomOf="@id/singup_passwordEdit2"
+        app:layout_constraintStart_toStartOf="@id/singup_passwordEdit2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        />
+
     <Button
         android:id="@+id/signup_button"
         android:layout_width="0dp"
@@ -126,7 +170,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordImageView2" />
-
+<!--
+    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+        android:id="@+id/OAuthSigninButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/naver_logsquare"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup_button" />
+-->
     <TextView
         android:id="@+id/signup_debugText"
         android:layout_width="wrap_content"

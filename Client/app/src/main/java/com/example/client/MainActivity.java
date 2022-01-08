@@ -21,8 +21,6 @@ import net.daum.mf.map.api.MapView;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
-
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
-        drawerLayout.setDrawerListener(listener);
+        drawerLayout.addDrawerListener(listener);
 
         openMenuButton = (Button) findViewById(R.id.open_menu_button);
         openMenuButton.setOnClickListener(new View.OnClickListener() {

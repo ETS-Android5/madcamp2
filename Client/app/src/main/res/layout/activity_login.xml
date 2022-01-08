@@ -97,17 +97,27 @@
         app:layout_constraintEnd_toEndOf="@+id/logInBtn"
         app:layout_constraintTop_toTopOf="@id/logOutBtn" />
 
+<!--
+    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+        android:id="@+id/OAuthLoginButton"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/naver_logsquare"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logOutBtn" />
+-->
     <TextView
         android:id="@+id/login_debugText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="What Happen?"
         android:textSize="20dp"
-        android:layout_marginTop="40dp"
-        app:layout_constraintTop_toBottomOf="@id/logOutBtn"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logInSignInBtn" />
 
 
 

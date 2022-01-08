@@ -1,5 +1,6 @@
 package com.example.client;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,12 +10,26 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
+import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,7 +38,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-    private final String URL = "http://192.168.77.245:8000/";
+    private final String serverURL = "http://192.168.77.245/";
+    private Context context;
 
     private Retrofit retrofit;
     private LoginServiceApi service;
@@ -36,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView logInDebugText;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_login);
+        context = LoginActivity.this;
 
         toSignupBtn = (Button) findViewById(R.id.logInSignInBtn);
         loginBtn = (Button) findViewById(R.id.logInBtn);
@@ -53,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         logInDebugText = (TextView) findViewById(R.id.login_debugText);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(serverURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service = retrofit.create(LoginServiceApi.class);
