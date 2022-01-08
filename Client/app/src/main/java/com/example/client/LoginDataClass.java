@@ -12,6 +12,8 @@ public class LoginDataClass {
     private String password1;
     @SerializedName("password2")
     private String password2;
+    @SerializedName("key")
+    private String key;
 
     public String getUsername() {
         return username;
@@ -44,4 +46,8 @@ public class LoginDataClass {
     public void setPassword2(String password2) {
         this.password2 = password2;
     }
+
+    public String getKey() { return key; }
+
+    public void setKey(String key) { this.key = key; }
 }

@@ -14,17 +14,18 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface ApiService {
-    @GET("/retrofit/get")
-    Call<ResponseBody> getFunc(@Query("data") String data);
-
+public interface LoginServiceApi {
     @FormUrlEncoded
     @POST("/rest-auth/registration/")
-    Call<LoginDataClass> postFunc(@FieldMap HashMap<String, Object> param);
+    Call<LoginDataClass> signUpPost(@FieldMap HashMap<String, Object> param);
 
     @FormUrlEncoded
-    @PUT("/retrofit/put/{id}")
-    Call<ResponseBody> putFunc(@Path("id") String id, @Field("data") String data);
+    @POST("/rest-auth/login/")
+    Call<LoginDataClass> logInPost(@FieldMap HashMap<String, Object> param);
+
+    @FormUrlEncoded
+    @POST("/rest-auth/logout/")
+    Call<LoginDataClass> logOutPost(@FieldMap HashMap<String, Object> param);
 
     @DELETE("/retrofit/delete/{id}")
     Call<ResponseBody> deleteFunc(@Path("id") String id);
