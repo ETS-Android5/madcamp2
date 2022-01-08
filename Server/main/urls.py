@@ -18,8 +18,10 @@ from rest_framework import routers
 # from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from area.views import AreaViewSet
 
 router = routers.DefaultRouter()
+router.register('areas', AreaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

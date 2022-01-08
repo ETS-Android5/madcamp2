@@ -2,11 +2,9 @@ package com.example.client;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,12 +19,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import net.daum.android.map.MapViewEventListener;
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
@@ -62,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView.setPOIItemEventListener(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         mapView.setShowCurrentLocationMarker(true);
 
         mapViewContainer.addView(mapView);
@@ -142,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
             }
         }
-
     }
 
     @Override
@@ -251,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
 
     }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

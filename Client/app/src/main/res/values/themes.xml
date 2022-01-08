@@ -14,8 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ChipTheme" parent="Theme.MaterialComponents.Light.NoActionBar"/>
 
+    <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">true</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">true</item>

@@ -27,6 +27,4 @@ public interface LoginServiceApi {
     @POST("/rest-auth/logout/")
     Call<LoginDataClass> logOutPost(@FieldMap HashMap<String, Object> param);
 
-    @DELETE("/retrofit/delete/{id}")
-    Call<ResponseBody> deleteFunc(@Path("id") String id);
 }

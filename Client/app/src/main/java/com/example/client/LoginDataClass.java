@@ -14,6 +14,8 @@ public class LoginDataClass {
     private String password2;
     @SerializedName("key")
     private String key;
+    @SerializedName("user")
+    private Integer user;
 
     public String getUsername() {
         return username;
@@ -50,4 +52,8 @@ public class LoginDataClass {
     public String getKey() { return key; }
 
     public void setKey(String key) { this.key = key; }
+
+    public Integer getUser() { return user; }
+
+    public void setUser(Integer user) { this.user = user; }
 }

@@ -52,6 +52,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView logInDebugText;
 
+    static String token = "";
+    static Integer id = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,8 +88,9 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
                         if(response.isSuccessful()) {
-                            Log.d("LogIn", "onResponse: 성공\n" + response.body().getKey());
-                            logInDebugText.setText("로그인 중");
+                            token = response.body().getKey();
+                            id = response.body().getUser();
+                            logInDebugText.setText(token);
                         } else {
                             logInDebugText.setText("로그인 Fail");
                         }
@@ -110,6 +114,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
                         if(response.isSuccessful()) {
                             Log.d("LogOut", "onResponse: 성공");
+                            token = "";
+                            id = -1;
                             logInDebugText.setText("로그아웃");
                         } else {
                             logInDebugText.setText("로그아웃 Fail");
