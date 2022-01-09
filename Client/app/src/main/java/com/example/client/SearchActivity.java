@@ -1,6 +1,7 @@
 package com.example.client;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -34,9 +36,14 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchView search;
     private RecyclerView recyclerView;
+    private Chip chipAll;
+    private Chip chipRestaurant;
+    private Chip chipCafe;
+    private Chip chipCulture;
 
     private SearchAdapter searchAdapter;
 
+    private String searchMode;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
             //검색버튼을 눌렀을 경우
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchAPI.getSearchData(API_KEY,search.getQuery().toString()).enqueue(new Callback<SearchDataClass>() {
+                searchAPI.getSearchData(API_KEY,search.getQuery().toString(),searchMode).enqueue(new Callback<SearchDataClass>() {
                     @Override
                     public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                         if(response.isSuccessful()){
@@ -90,7 +97,7 @@ public class SearchActivity extends AppCompatActivity {
             //텍스트가 바뀔때마다 호출
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchAPI.getSearchData(API_KEY,search.getQuery().toString()).enqueue(new Callback<SearchDataClass>() {
+                searchAPI.getSearchData(API_KEY,search.getQuery().toString(),searchMode).enqueue(new Callback<SearchDataClass>() {
                     @Override
                     public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                         if(response.isSuccessful()){
@@ -116,8 +123,40 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        chipAll = (Chip) findViewById(R.id.chip_all);
+        chipRestaurant=(Chip) findViewById(R.id.chip_restaurant);
+        chipCafe = (Chip) findViewById(R.id.chip_cafe);
+        chipCulture = (Chip) findViewById(R.id.chip_culture);
 
+        chipAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMode="";
+                getSearchData();
 
+            }
+        });
+        chipRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMode="FD6";
+                getSearchData();
+            }
+        });
+        chipCafe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMode="CE7";
+                getSearchData();
+            }
+        });
+        chipCulture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMode="CT1";
+                getSearchData();
+            }
+        });
     }
 
     @Override
@@ -132,5 +171,30 @@ public class SearchActivity extends AppCompatActivity {
                 ((InputMethodManager)this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow((this.getWindow().getDecorView().getApplicationWindowToken()), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public void getSearchData()
+    {
+        searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchMode).enqueue(new Callback<SearchDataClass>() {
+            @Override
+            public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Test", "Raw: response.raw()");
+                    Log.d("Test", new Gson().toJson(response.body()));
+
+                    recyclerView = findViewById(R.id.search_recyclerview);
+                    searchAdapter = new SearchAdapter(getApplicationContext(), response.body().getDocuments());
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setAdapter(searchAdapter);
+                } else {
+                    Log.w("MainActivity", "통신 실패: ${t.message}");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchDataClass> call, Throwable t) {
+                Log.w("MainActivity", "통신 실패: ${t.message}");
+            }
+        });
     }
 }

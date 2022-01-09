@@ -22,6 +22,9 @@ public class SearchDataClass {
         private String place_name;
         @SerializedName("address_name")
         private String address_name;
+        private String x;
+        private String y;
+
 
         public String getAddress_name() {
             return address_name;

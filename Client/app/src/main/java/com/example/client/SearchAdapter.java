@@ -39,7 +39,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> {
     public void onBindViewHolder(@NonNull Holder holder, int position) {
 
         int itemposition = position;
-        holder.result.setText(new Gson().toJson(list.get(itemposition)));
+        holder.result.setText(new Gson().toJson(list.get(itemposition).getPlace_name()));
 
     }
 
