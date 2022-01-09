@@ -3,6 +3,7 @@ from django.http.response import HttpResponse, JsonResponse
 from rest_framework import viewsets
 from .serializer import AreaSerializer
 from .models import Area
+from itertools import chain
 
 class AreaViewSet(viewsets.ModelViewSet):
     queryset = Area.objects.all()
@@ -15,10 +16,6 @@ def get_area_by_senses(request):
         touch = request.POST.get('touch')
         taste = request.POST.get('taste')
 
-        print(sight)
-        print(touch)
-        print(taste)
-
         sightResult = Area.objects.filter(sight = sight)
         touchResult = Area.objects.filter(touch = touch)
         tasteResult = Area.objects.filter(taste = taste)
@@ -28,6 +25,13 @@ def get_area_by_senses(request):
         tasteSight = tasteResult.filter(sight = sight)
 
         finalResult = sightTouch.filter(taste = taste)
-        print(finalResult)
-        
-        return HttpResponse(finalResult, content_type="application/json")
+        if(finalResult.count() <= 10) :
+            finalResult = sightTouch | touchTaste | tasteSight
+            if(finalResult.count() <= 10):
+                finalResult = sightResult | touchResult | tasteResult
+
+        finalResult = list(finalResult.values())        
+
+        return JsonResponse(finalResult, safe=False)
+        #return HttpResponse(finalResult, content_type="application/json")
+        #return HttpResponse(finalResult., content_type="application/json")
