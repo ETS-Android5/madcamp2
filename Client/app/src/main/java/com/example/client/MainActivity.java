@@ -1,13 +1,8 @@
 package com.example.client;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
@@ -16,9 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.content.res.Configuration;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -26,8 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -36,8 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import net.daum.android.map.MapViewEventListener;
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
@@ -48,8 +36,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener{
 
@@ -89,11 +75,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView.setPOIItemEventListener(this);
         mapView.setCurrentLocationEventListener(this);
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-
         mapView.setShowCurrentLocationMarker(true);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
         mapViewContainer.addView(mapView);
-
 
         //getHashKey();
 
@@ -191,7 +175,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
             }
         }
-
     }
 
     private void showNoPermissionToastAndFinish() {
@@ -340,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
 
     }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

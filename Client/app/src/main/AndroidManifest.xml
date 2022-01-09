@@ -8,8 +8,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,9 +26,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:theme="@style/FullScreenTheme"
             android:name=".LoginActivity">
@@ -42,6 +38,7 @@
         <activity
             android:name=".SearchActivity"
             android:theme="@style/ChipTheme">
+
         </activity>
         <activity
             android:theme="@style/ChipTheme"
@@ -52,6 +49,4 @@
                 android:value="610mz80mr9" />
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="002448364a9b04e2bdfdad9d74c9ce5a"/>
     </application>
-
-
 </manifest>
