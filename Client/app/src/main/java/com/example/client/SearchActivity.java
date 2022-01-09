@@ -9,11 +9,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,17 +38,24 @@ public class SearchActivity extends AppCompatActivity {
 
     private Retrofit retrofit;
     private SearchAPI searchAPI;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
 
+    private SearchFragment fragment;
+    private SearchRecyclerviewFragment recyclerviewFragment;
     private SearchView search;
     private RecyclerView recyclerView;
     private Chip chipAll;
     private Chip chipRestaurant;
     private Chip chipCafe;
     private Chip chipCulture;
+    private Switch toggleSwitch;
+    private int searchMode = 0;
+    private FragmentContainerView fragmentContainerView;
 
     private SearchAdapter searchAdapter;
 
-    private String searchMode;
+    private String searchCategory;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,56 +81,14 @@ public class SearchActivity extends AppCompatActivity {
             //검색버튼을 눌렀을 경우
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchAPI.getSearchData(API_KEY,search.getQuery().toString(),searchMode).enqueue(new Callback<SearchDataClass>() {
-                    @Override
-                    public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
-                        if(response.isSuccessful()){
-                            Log.d("Test", "Raw: response.raw()");
-                            Log.d("Test", new Gson().toJson(response.body()));
-
-                            recyclerView = findViewById(R.id.search_recyclerview);
-                            searchAdapter = new SearchAdapter(getApplicationContext(), response.body().getDocuments());
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            recyclerView.setAdapter(searchAdapter);
-                        }
-                        else{
-                            Log.w("MainActivity", "통신 실패: ${t.message}");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SearchDataClass> call, Throwable t) {
-                        Log.w("MainActivity", "통신 실패: ${t.message}");
-                    }
-                });
+                getSearchData();
                 return true;
             }
 
             //텍스트가 바뀔때마다 호출
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchAPI.getSearchData(API_KEY,search.getQuery().toString(),searchMode).enqueue(new Callback<SearchDataClass>() {
-                    @Override
-                    public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
-                        if(response.isSuccessful()){
-                            Log.d("Test", "Raw: response.raw()");
-                            Log.d("Test", new Gson().toJson(response.body()));
-
-                            recyclerView = findViewById(R.id.search_recyclerview);
-                            searchAdapter = new SearchAdapter(getApplicationContext(), response.body().getDocuments());
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            recyclerView.setAdapter(searchAdapter);
-                        }
-                        else{
-                            Log.w("MainActivity", "통신 실패: ${t.message}");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SearchDataClass> call, Throwable t) {
-                        Log.w("MainActivity", "통신 실패: ${t.message}");
-                    }
-                });
+                getSearchData();
                 return true;
             }
         });
@@ -131,32 +101,71 @@ public class SearchActivity extends AppCompatActivity {
         chipAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchMode="";
-                getSearchData();
+                searchCategory="";
+                if(searchMode == 0) {
+                    getSearchData();
+                }
 
             }
         });
         chipRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchMode="FD6";
-                getSearchData();
+                searchCategory="FD6";
+                if(searchMode == 0) {
+                    getSearchData();
+                }
             }
         });
         chipCafe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchMode="CE7";
-                getSearchData();
+                searchCategory="CE7";
+                if(searchMode == 0) {
+                    getSearchData();
+                }
             }
         });
         chipCulture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                searchMode="CT1";
-                getSearchData();
+                searchCategory="CT1";
+                if(searchMode == 0) {
+                    getSearchData();
+                }
             }
         });
+
+        fragmentManager = getSupportFragmentManager();
+        recyclerviewFragment = new SearchRecyclerviewFragment();
+        transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, recyclerviewFragment).commitAllowingStateLoss();
+        toggleSwitch = (Switch) findViewById(R.id.search_toggle_switch);
+        toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    searchMode = 1;
+                    Log.i("토글","on");
+                    fragmentManager = getSupportFragmentManager();
+
+                    fragment = new SearchFragment();
+
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, fragment).commitAllowingStateLoss();
+
+                }else{
+                    searchMode = 0;
+                    Log.i("토글","off");
+                    fragmentManager = getSupportFragmentManager();
+                    recyclerviewFragment = new SearchRecyclerviewFragment();
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentContainerView, recyclerviewFragment).commitAllowingStateLoss();
+                    getSearchData();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -175,16 +184,16 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getSearchData()
     {
-        searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchMode).enqueue(new Callback<SearchDataClass>() {
+        searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchCategory).enqueue(new Callback<SearchDataClass>() {
             @Override
             public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                 if (response.isSuccessful()) {
                     Log.d("Test", "Raw: response.raw()");
                     Log.d("Test", new Gson().toJson(response.body()));
 
-                    recyclerView = findViewById(R.id.search_recyclerview);
+                    recyclerView = findViewById(R.id.searchRecyclerview);
                     searchAdapter = new SearchAdapter(getApplicationContext(), response.body().getDocuments());
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getApplication()));
                     recyclerView.setAdapter(searchAdapter);
                 } else {
                     Log.w("MainActivity", "통신 실패: ${t.message}");
