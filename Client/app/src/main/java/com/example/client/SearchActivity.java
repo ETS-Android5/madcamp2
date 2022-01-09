@@ -69,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
             //검색버튼을 눌렀을 경우
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchAPI.getSearchData(API_KEY,search.getQuery().toString(),searchMode).enqueue(new Callback<SearchDataClass>() {
+                searchAPI.getSearchData(API_KEY,search.getQuery().toString(), searchMode).enqueue(new Callback<SearchDataClass>() {
                     @Override
                     public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                         if(response.isSuccessful()){
