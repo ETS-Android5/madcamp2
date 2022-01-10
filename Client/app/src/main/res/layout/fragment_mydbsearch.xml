@@ -1,18 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:text="서버에서 데이터 받아오기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_comfortable">
+
+        <TextView
+            android:id="@+id/searchAreaTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/searchAddressTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="40dp"
+            android:text="I want to search..."
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/searchAreaTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/searchAddressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:text="This Address"
+            android:textSize="17dp"
+            app:layout_constraintStart_toStartOf="@id/searchAddressTitle"
+            app:layout_constraintTop_toBottomOf="@id/searchAddressTitle" />
+
+        <TextView
+            android:id="@+id/searchSightTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What Sight do you want?"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@id/searchAddressTitle"
+            app:layout_constraintTop_toBottomOf="@id/searchAddressTextView" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollSearchSight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchSightTitle">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSearchSight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:singleLine="true"
+                />
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/searchTouchTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What Touch do you want?"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@id/searchSightTitle"
+            app:layout_constraintTop_toBottomOf="@id/horizontalScrollSearchSight" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollSearchTouch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchTouchTitle">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSearchTouch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:singleLine="true"
+                />
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/searchTasteTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What Taste do you want?"
+            android:textSize="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="@id/searchTouchTitle"
+            app:layout_constraintTop_toBottomOf="@id/horizontalScrollSearchTouch" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollSearchTaste"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchTasteTitle">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupSearchTaste"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:singleSelection="true"
+                app:singleLine="true"/>
+
+        </HorizontalScrollView>
+
+        <Button
+            android:id="@+id/sendSearchQueryBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confime"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toBottomOf="@id/horizontalScrollSearchTaste"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

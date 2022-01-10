@@ -17,6 +17,7 @@ Including another URLconf
 from rest_framework import routers
 from django.contrib import admin
 from django.urls import path, include
+from reviews.views import search_area_by_senses
 
 from reviews.views import ReviewViewSet
 
@@ -29,4 +30,5 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('accounts/', include('allauth.urls')),
+    path('searchsense/', search_area_by_senses)
 ]

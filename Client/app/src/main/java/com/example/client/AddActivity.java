@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import static com.example.client.LoginActivity.id;
 import static com.example.client.LoginActivity.token;
 
 import java.io.IOException;
@@ -31,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AddActivity extends AppCompatActivity {
 
-    private String pointAdress;
+    private String pointAddress, city, county, last;
 
     private TextView addressText;
     private Button reviewSendBtn;
@@ -43,8 +42,8 @@ public class AddActivity extends AppCompatActivity {
     private String[] tasteList = {"SWEET", "SALTY", "BITTER", "SOUR", "NUTTY", "HOT"};
 
     private Retrofit retrofit;
-    private AreaServiceApi areaServiceApi;
-    private final String serverURL = "http://192.249.18.111/";
+    private ReviewServiceApi reviewServiceApi;
+    private final String serverURL = "http://192.168.77.245/";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +54,12 @@ public class AddActivity extends AppCompatActivity {
 
         addressText = (TextView) findViewById(R.id.reviewAddressTextView);
         reviewSendBtn = (Button) findViewById(R.id.sendReviewBtn);
-        pointAdress = getIntent().getExtras().getString("pointAdress");
-        addressText.setText(pointAdress);
+        pointAddress = getIntent().getExtras().getString("pointAdress");
+        String[] splits = pointAddress.split("\\s", 3);
+        city = splits[0];
+        county = splits[1];
+        last = splits[2];
+        addressText.setText(pointAddress);
 
         Retrofit.Builder retroBuilder = new Retrofit.Builder()
                 .baseUrl(serverURL)
@@ -78,53 +81,54 @@ public class AddActivity extends AppCompatActivity {
         retroBuilder.client(client);
 
         retrofit = retroBuilder.build();
-        areaServiceApi = retrofit.create(AreaServiceApi.class);
+        reviewServiceApi = retrofit.create(ReviewServiceApi.class);
 
+        //chipGroupSight.removeAllViews();
         chipGroupSight = findViewById(R.id.chipGroupSight);
         for(int i = 0; i < sightList.length; ++i) {
             chip = (Chip)this.getLayoutInflater().inflate(R.layout.layout_chip_choice, null, false);
             chip.setText(sightList[i]);
+            chip.setId(i);
 
             chipGroupSight.addView(chip);
         }
 
+        //chipGroupTouch.removeAllViews();
         chipGroupTouch = findViewById(R.id.chipGroupTouch);
         for(int i = 0; i < touchList.length; ++i) {
             chip = (Chip)this.getLayoutInflater().inflate(R.layout.layout_chip_choice, null, false);
             chip.setText(touchList[i]);
-
+            chip.setId(i);
             chipGroupTouch.addView(chip);
         }
 
+        //chipGroupTaste.removeAllViews();
         chipGroupTaste = findViewById(R.id.chipGroupTaste);
         for(int i = 0; i < tasteList.length; ++i) {
             chip = (Chip)this.getLayoutInflater().inflate(R.layout.layout_chip_choice, null, false);
             chip.setText(tasteList[i]);
-
+            chip.setId(i);
             chipGroupTaste.addView(chip);
         }
 
         reviewSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, Object> input = new HashMap<>();
-                int sightIdx = chipGroupSight.getCheckedChipId() - 1;
-                int touchIdx = chipGroupTouch.getCheckedChipId() - 11;
-                int tasteIdx = chipGroupTaste.getCheckedChipId() - 17;
+                Area area = new Area(city, county, last);
 
-                input.put("reviewer", id);
-                input.put("address", pointAdress);
-                input.put("sight", sightIdx);
-                input.put("touch", touchIdx);
-                input.put("taste", tasteIdx);
+                int sightIdx = chipGroupSight.getCheckedChipId();
+                int touchIdx = chipGroupTouch.getCheckedChipId();
+                int tasteIdx = chipGroupTaste.getCheckedChipId();
 
-                Log.d("sight", Integer.toString(sightIdx));
-                Log.d("touch", Integer.toString(touchIdx));
-                Log.d("taste", Integer.toString(tasteIdx));
+                Log.d("ChipCheck", Integer.toString(sightIdx));
+                Log.d("ChipCheck", Integer.toString(touchIdx));
+                Log.d("ChipCheck", Integer.toString(tasteIdx));
 
-                areaServiceApi.areaPost(input).enqueue(new Callback<AreaDataClass>() {
+                Review review = new Review(area, sightIdx, touchIdx, tasteIdx);
+
+                reviewServiceApi.reviewPost(review).enqueue(new Callback<Review>() {
                     @Override
-                    public void onResponse(Call<AreaDataClass> call, Response<AreaDataClass> response) {
+                    public void onResponse(Call<Review> call, Response<Review> response) {
                         if(response.isSuccessful()) {
                             Toast.makeText(AddActivity.this, "Area Add Success", Toast.LENGTH_SHORT);
                         } else {
@@ -138,8 +142,8 @@ public class AddActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<AreaDataClass> call, Throwable t) {
-
+                    public void onFailure(Call<Review> call, Throwable t) {
+                        Log.d("AreaAddRespone", "something wrong");
                     }
                 });
             }

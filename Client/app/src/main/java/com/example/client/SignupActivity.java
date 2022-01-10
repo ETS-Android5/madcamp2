@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignupActivity extends AppCompatActivity {
-    private final String URL = "http://192.249.18.111/";
+    private final String URL = "http://192.168.77.245/";
 
     private Retrofit retrofit;
     private LoginServiceApi service;
