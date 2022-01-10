@@ -47,8 +47,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private Button openMenuButton;
     private Button toLogin;
     private Button search;
-    private String pointAdress;
+    private String pointAdrress;
+    private String x;
+    private String y;
     private MapPOIItem customMarker;
+
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -70,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         checkPermissions();
 
 
+
+
         MapView mapView = new MapView(this);
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
 
@@ -83,6 +88,41 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapViewContainer.addView(mapView);
 
         //getHashKey();
+
+
+
+
+            Intent intent = getIntent();
+            Bundle extra= intent.getExtras();
+            if( extra != null) {
+                Log.i("intent","받음");
+                x = intent.getExtras().getString("x");
+                y = intent.getExtras().getString("y");
+                Log.e("x",x);
+                Log.e("y",y);
+                System.out.println(x);
+                System.out.println(y);
+                double a = Double.parseDouble(x);
+                double b = Double.parseDouble(y);
+                //y = Double.parseDouble(intent.getExtras().getString("y"));
+
+                MapPOIItem customMarker = new MapPOIItem();
+                customMarker.setItemName("Custom Marker");
+                customMarker.setTag(1);
+                customMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(b,a));
+                customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+                customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+                customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
+
+                mapView.removeAllPOIItems();
+                mapView.addPOIItem(customMarker);
+            }
+
+
+
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
@@ -283,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
         Intent intent_to_add = new Intent(MainActivity.this, AddActivity.class);
-        intent_to_add.putExtra("pointAdress",pointAdress);
+        intent_to_add.putExtra("pointAdress",pointAdrress);
         startActivity(intent_to_add);
     }
 
@@ -321,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
         Log.i("검색된 주소",  s);
-        pointAdress = s;
+        pointAdrress = s;
     }
 
     @Override
