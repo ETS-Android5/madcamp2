@@ -2,6 +2,8 @@ package com.example.client;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Review {
     @SerializedName("area")
     private Area area;
@@ -11,6 +13,16 @@ public class Review {
     private int touch;
     @SerializedName("taste")
     private int taste;
+    @SerializedName("result")
+    private List<Area> result;
+
+    public List<Area> getResult() {
+        return result;
+    }
+
+    public void setResult(List<Area> result) {
+        this.result = result;
+    }
 
     public Review(Area area, int sight, int touch, int taste) {
         this.area = area;

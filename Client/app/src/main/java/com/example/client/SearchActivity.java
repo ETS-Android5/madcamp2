@@ -51,14 +51,17 @@ public class SearchActivity extends AppCompatActivity {
     private Chip chipCulture;
     private Switch toggleSwitch;
     private int searchMode = 0;
-    private FragmentContainerView fragmentContainerView;
 
     private SearchAdapter searchAdapter;
 
-    private String searchCategory;
+    private String searchCategory, currentAddr;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        currentAddr = intent.getStringExtra("current");
+        Log.d("Current1", currentAddr);
+
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
@@ -137,10 +140,11 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        fragmentManager = getSupportFragmentManager();
         recyclerviewFragment = new SearchRecyclerviewFragment();
+        fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragmentContainerView, recyclerviewFragment).commitAllowingStateLoss();
+
         toggleSwitch = (Switch) findViewById(R.id.search_toggle_switch);
         toggleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -151,9 +155,13 @@ public class SearchActivity extends AppCompatActivity {
                     fragmentManager = getSupportFragmentManager();
 
                     fragment = new SearchFragment();
+                    Log.d("Current2", currentAddr);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("address", currentAddr);
+                    fragment.setArguments(bundle);
 
                     transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentContainerView, fragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragmentContainerView, fragment).commit();
 
                 }else{
                     searchMode = 0;

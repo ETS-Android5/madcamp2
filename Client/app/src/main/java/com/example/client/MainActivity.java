@@ -47,11 +47,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private Button openMenuButton;
     private Button toLogin;
     private Button search;
-    private String pointAdrress;
-    private String x;
-    private String y;
-    private MapPOIItem customMarker;
-
+    private String pointAdrress, x, y, currentAddress;
+    private MapReverseGeoCoder mapLongGeoCoder, mapCurrentGeoCoder;
+    private MapPoint currentPoint;
+    private MapPOIItem longClickMarker, searchEngineMarker;
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE
     };
-    MapReverseGeoCoder reverseGeoCoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +70,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
         checkPermissions();
 
-
-
-
         MapView mapView = new MapView(this);
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-
 
         mapView.setMapViewEventListener(this);
         mapView.setPOIItemEventListener(this);
@@ -85,44 +79,39 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         mapView.setShowCurrentLocationMarker(true);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        //mapCurrentGeoCoder = new MapReverseGeoCoder(APPKEY, currentPoint, this, this);
         mapViewContainer.addView(mapView);
 
-        //getHashKey();
+        Intent intent = getIntent();
+        Bundle extra= intent.getExtras();
+        if( extra != null) {
+            Log.i("intent","받음");
+            x = intent.getExtras().getString("x");
+            y = intent.getExtras().getString("y");
+            Log.e("x",x);
+            Log.e("y",y);
+            System.out.println(x);
+            System.out.println(y);
+            double a = Double.parseDouble(x);
+            double b = Double.parseDouble(y);
 
-
-
-
-            Intent intent = getIntent();
-            Bundle extra= intent.getExtras();
-            if( extra != null) {
-                Log.i("intent","받음");
-                x = intent.getExtras().getString("x");
-                y = intent.getExtras().getString("y");
-                Log.e("x",x);
-                Log.e("y",y);
-                System.out.println(x);
-                System.out.println(y);
-                double a = Double.parseDouble(x);
-                double b = Double.parseDouble(y);
-                //y = Double.parseDouble(intent.getExtras().getString("y"));
-
-                MapPOIItem customMarker = new MapPOIItem();
-                customMarker.setItemName("Custom Marker");
-                customMarker.setTag(1);
-                customMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(b,a));
-                customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
-                customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-                customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-                customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
-                customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-
-                mapView.removeAllPOIItems();
-                mapView.addPOIItem(customMarker);
+            if(searchEngineMarker != null) {
+                mapView.removePOIItem(searchEngineMarker);
+                searchEngineMarker = null;
             }
+            searchEngineMarker = new MapPOIItem();
+            searchEngineMarker.setItemName("Custom Marker");
+            searchEngineMarker.setTag(2);
+            searchEngineMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(b,a));
+            searchEngineMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+            searchEngineMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+            searchEngineMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+            searchEngineMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+            searchEngineMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+            searchEngineMarker.setCustomSelectedImageResourceId(R.drawable.pin);
 
-
-
+            mapView.addPOIItem(searchEngineMarker);
+        }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
@@ -141,12 +130,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Log.i("searchview","searchview 클릭");
                 Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
+                Log.d("Current", currentAddress);
+                intent_to_search.putExtra("current", currentAddress);
                 startActivity(intent_to_search);
                 overridePendingTransition(R.anim.fadein, R.anim.none);
-
             }
         });
 
@@ -163,9 +151,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             toLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent_to_login);
-
+                    Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent_to_login);
                 }
             });
         }
@@ -198,30 +185,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         return true;
     }
 
-
-    private void getHashKey() {
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (packageInfo == null)
-            Log.e("KeyHash", "KeyHash:null");
-
-        for (Signature signature : packageInfo.signatures) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            } catch (NoSuchAlgorithmException e) {
-                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
-            }
-        }
-    }
-
     private void showNoPermissionToastAndFinish() {
-
         Toast toast = Toast.makeText(this, "권한 요청에 동의 해주셔야 이용 가능합니다. 설정에서 권한 허용 하시기 바랍니다.", Toast.LENGTH_SHORT);
         toast.show();
 
@@ -279,24 +243,24 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
-        if(customMarker != null) {
-            mapView.removePOIItem(customMarker);
-            customMarker = null;
+        if(longClickMarker != null) {
+            mapView.removePOIItem(longClickMarker);
+            longClickMarker = null;
         }
-        customMarker = new MapPOIItem();
-        customMarker.setItemName("Custom Marker");
-        customMarker.setTag(1);
-        customMarker.setMapPoint(mapPoint);
-        customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-        customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
-        customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-        customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-        customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
-        customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-        mapView.addPOIItem(customMarker);
+        longClickMarker = new MapPOIItem();
+        longClickMarker.setItemName("Custom Marker");
+        longClickMarker.setTag(1);
+        longClickMarker.setMapPoint(mapPoint);
+        longClickMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+        longClickMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+        longClickMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+        longClickMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+        longClickMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+        longClickMarker.setCustomSelectedImageResourceId(R.drawable.pin);
+        mapView.addPOIItem(longClickMarker);
 
-        MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, mapPoint, this, this );
-        mapGeoCoder.startFindingAddress( );
+        mapLongGeoCoder = new MapReverseGeoCoder( APPKEY, mapPoint, this, this );
+        mapLongGeoCoder.startFindingAddress( );
     }
 
     @Override
@@ -340,7 +304,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-
+        currentPoint = mapPoint;
+        mapCurrentGeoCoder = new MapReverseGeoCoder(APPKEY, currentPoint, this, this);
+        mapCurrentGeoCoder.startFindingAddress();
     }
 
     @Override
@@ -360,8 +326,12 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
+        if(mapReverseGeoCoder == mapLongGeoCoder) {
+            pointAdrress = s;
+        } else {
+            currentAddress = s;
+        }
         Log.i("검색된 주소",  s);
-        pointAdrress = s;
     }
 
     @Override
@@ -382,8 +352,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         }
         return super.dispatchTouchEvent(ev);
     }
-
-
 
     class CustomCalloutBalloonAdapter implements CalloutBalloonAdapter {
         private final View mCalloutBalloon;

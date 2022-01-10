@@ -16,6 +16,8 @@ public class Area {
 
     public String getLast() { return last; }
 
+    public String getAddress() { return city + " " + county + " " + last;}
+
     public void setCity(String city) {
         this.city = city;
     }
