@@ -56,18 +56,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> {
             public void onClick(View view) {
                 Intent intent_to_mainactivity = new Intent(context, MainActivity.class);
                 intent_to_mainactivity.putExtra("x",list.get(itemposition).getX());
-                if((list.get(itemposition).getX()).compareTo("129.176340865623") == 0 ){
-                    Log.d("하하하하하하","ㅁㄴㅇㄻㄴㅇㄹ");
-                }
                 Log.d("x",list.get(itemposition).getX());
-                Log.d("y","36.154894");
                 intent_to_mainactivity.putExtra("y",list.get(itemposition).getY());
                 Log.d("y",list.get(itemposition).getY());
-                System.out.println(list.get(itemposition).getY());
+                intent_to_mainactivity.putExtra("place_name",list.get(itemposition).getPlace_name());
                 intent_to_mainactivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent_to_mainactivity);
             }
         });
+        holder.range.setText(list.get(itemposition).getDistance());
     }
 
 
@@ -79,10 +76,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> {
     public class Holder extends RecyclerView.ViewHolder {
 
         public TextView result;
+        public TextView range;
+
         public Holder(View view) {
             super(view);
             result = (TextView) view.findViewById(R.id.result);
             toMap = (Button) view.findViewById(R.id.toMap);
+            range = (TextView) view.findViewById(R.id.range);
         }
     }
 }
