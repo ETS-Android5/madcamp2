@@ -33,8 +33,14 @@ class Area(models.Model):
     county = models.CharField(max_length=20)
     last = models.CharField(max_length=40)
 
+    def __str__(self):
+        return "{0} {1} {2}".format(self.city, self.county, self.last)
+
 class Review(models.Model):
     area = models.ForeignKey(Area, on_delete=models.CASCADE)
     sight = models.IntegerField(choices=SightType.choices)
     touch = models.IntegerField(choices=TouchType.choices)
     taste = models.IntegerField(choices=TasteType.choices)
+
+    def __str__(self):
+        return "{0}/{1}".format(self.area, self.id)
