@@ -47,9 +47,7 @@ public class SearchDataClass {
             return address_name;
         }
 
-        public void setAddress_name(String address_name) {
-            this.address_name = address_name;
-        }
+        public void setAddress_name(String address_name) { this.address_name = address_name; }
 
         public String getPlace_name() {
             return place_name;

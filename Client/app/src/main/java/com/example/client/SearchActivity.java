@@ -82,6 +82,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 getSearchData();
+
                 return true;
             }
 

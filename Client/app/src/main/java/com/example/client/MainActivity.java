@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private String pointAdrress;
     private String x;
     private String y;
+    private MapPOIItem customMarker;
+
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -277,7 +279,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
-        MapPOIItem customMarker = new MapPOIItem();
+        if(customMarker != null) {
+            mapView.removePOIItem(customMarker);
+            customMarker = null;
+        }
+        customMarker = new MapPOIItem();
         customMarker.setItemName("Custom Marker");
         customMarker.setTag(1);
         customMarker.setMapPoint(mapPoint);
@@ -287,8 +293,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
         customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
         customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-
-        mapView.removeAllPOIItems();
         mapView.addPOIItem(customMarker);
 
         MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, mapPoint, this, this );
