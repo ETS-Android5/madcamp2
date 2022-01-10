@@ -15,14 +15,11 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface SearchAPI {
-    @GET("v2/local/search/keyword.json")
-    Call<SearchDataClass> getSearchData(
+public interface ImageSearchAPI {
+    @GET("v2/search/image")
+    Call<ImageSearchDataClass> getImageSearchData(
             @Header("Authorization") String key,
-            @Query("query") String query,
-            @Query("category_group_code") String category_group_code,
-            @Query("x") String x,
-            @Query("y") String y
+            @Query("query") String query
 
     );
 
