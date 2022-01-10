@@ -333,6 +333,13 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
         Log.i("디테일로그", "onMapViewSingleTapped");
         mapView.removeAllPOIItems();
+        if(currentLocation == null){
+            Toast.makeText(getApplicationContext(), "사용자 위치를 불러오는 중입니다.",Toast.LENGTH_LONG).show();
+        }else {
+            MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, currentLocation, this, this );
+            mapGeoCoder.startFindingAddress( );
+        }
+
     }
 
     @Override
@@ -364,7 +371,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         MapReverseGeoCoder mapGeoCoder = new MapReverseGeoCoder( APPKEY, mapPoint, this, this );
         mapGeoCoder.startFindingAddress( );
 
-        getPlaceNameByCoord();
 
 
     }
