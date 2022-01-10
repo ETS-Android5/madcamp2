@@ -44,6 +44,7 @@ public class AddActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private ReviewServiceApi reviewServiceApi;
     private final String serverURL = "http://192.168.77.245/";
+    // private final String serverURL = "http://192.249.18.111/";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

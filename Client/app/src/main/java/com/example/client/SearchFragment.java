@@ -48,6 +48,7 @@ public class SearchFragment extends Fragment {
     private Retrofit retrofit;
     private ReviewServiceApi reviewServiceApi;
     private final String serverURL = "http://192.168.77.245/";
+    // private final String serverURL = "http://192.249.18.111/";
 
     @Nullable
     @Override

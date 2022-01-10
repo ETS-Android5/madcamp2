@@ -39,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
     private final String serverURL = "http://192.168.77.245/";
+    // private final String serverURL = "http://192.249.18.111/";
     private Context context;
 
     private Retrofit retrofit;

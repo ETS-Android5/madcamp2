@@ -4,6 +4,7 @@ from django.http.response import JsonResponse
 from rest_framework.viewsets import ModelViewSet
 from .models import Review, Area
 from .serializer import ReviewSerializer, AreaSerializer
+from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 import numpy as np
 
@@ -15,6 +16,7 @@ class AreaViewSet(ModelViewSet):
     queryset = Area.objects.all()
     serializer_class = AreaSerializer
 
+@csrf_exempt
 def search_area_by_senses(request):
     if request.method == 'POST':
         dictQuery = loads(request.body.decode('utf-8'))
