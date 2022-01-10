@@ -57,7 +57,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener{
+public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
 
 
     private final String URL = "https://dapi.kakao.com/";
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private Button toLogin;
     private Button search;
 
-    private String pointAdrress, x, y, currentAddress, placeName;
+    private String pointAddress, x, y, currentAddress, placeName;
     private MapReverseGeoCoder mapLongGeoCoder, mapCurrentGeoCoder;
     private MapPoint currentLocation;
     private MapPOIItem longClickMarker, searchEngineMarker;
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         checkPermissions();
 
         pinAddress = (TextView) findViewById(R.id.PinAddress);
-      
+
         MapView mapView = new MapView(this);
         ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
 
@@ -114,64 +114,49 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
         mapView.setShowCurrentLocationMarker(true);
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30,30));
-        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30,-6));
+        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
+        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
 
         mapViewContainer.addView(mapView);
         //getHashKey();
 
 
+        Intent intent = getIntent();
+        Bundle extra = intent.getExtras();
+        if (extra != null) {
+            Log.i("intent", "받음");
 
 
-            Intent intent = getIntent();
-            Bundle extra= intent.getExtras();
-            if( extra != null) {
-                Log.i("intent","받음");
+            x = intent.getExtras().getString("x");
+            y = intent.getExtras().getString("y");
+            placeName = intent.getExtras().getString("place_name");
+            Log.i("x", x);
+            Log.i("y", y);
+            double a = Double.parseDouble(x);
+            double b = Double.parseDouble(y);
+            pinAddress.setText(placeName);
+            getImageByPlaceName();
 
+            //y = Double.parseDouble(intent.getExtras().getString("y"));
 
-                x = intent.getExtras().getString("x");
-                y = intent.getExtras().getString("y");
-                placeName = intent.getExtras().getString("place_name");
-                Log.i("x",x);
-                Log.i("y",y);
-                double a = Double.parseDouble(x);
-                double b = Double.parseDouble(y);
-                pinAddress.setText(placeName);
-                getImageByPlaceName();
+            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+            MapPOIItem customMarker = new MapPOIItem();
+            customMarker.setItemName("Custom Marker");
+            customMarker.setTag(2);
+            MapPoint mp = MapPoint.mapPointWithGeoCoord(b, a);
+            customMarker.setMapPoint(mp);
+            customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+            customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+            customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+            customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+            customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+            customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
 
-                //y = Double.parseDouble(intent.getExtras().getString("y"));
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(mp);
+            mapView.moveCamera(cameraUpdate);
 
-                mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
-                MapPOIItem customMarker = new MapPOIItem();
-                customMarker.setItemName("Custom Marker");
-                customMarker.setTag(2);
-                MapPoint mp = MapPoint.mapPointWithGeoCoord(b,a);
-                customMarker.setMapPoint(mp);
-                customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-                customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
-                customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-                customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-                customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
-                customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-
-                CameraUpdate cameraUpdate= CameraUpdateFactory.newMapPoint(mp);
-                mapView.moveCamera(cameraUpdate);
-
-                mapView.removeAllPOIItems();
-                mapView.addPOIItem(customMarker);
-            }
-            searchEngineMarker = new MapPOIItem();
-            searchEngineMarker.setItemName("Custom Marker");
-            searchEngineMarker.setTag(2);
-            searchEngineMarker.setMapPoint(MapPoint.mapPointWithGeoCoord(b,a));
-            searchEngineMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-            searchEngineMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
-            searchEngineMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-            searchEngineMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-            searchEngineMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
-            searchEngineMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-
-            mapView.addPOIItem(searchEngineMarker);
+            mapView.removeAllPOIItems();
+            mapView.addPOIItem(customMarker);
         }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
@@ -203,26 +188,26 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode() == RESULT_OK) {
+                if (result.getResultCode() == RESULT_OK) {
                     Intent intent = result.getData();
                     int CallType = intent.getIntExtra("CallType", 0);
-                    if(CallType == 0) {
+                    if (CallType == 0) {
                         Log.d("return to Activity", "Returns");
                         ArrayList<String> addressList = intent.getStringArrayListExtra("address");
 
-                        if(searchResultMarker != null) {
-                            for(int i = 0; i < searchResultMarker.size(); ++i) {
+                        if (searchResultMarker != null) {
+                            for (int i = 0; i < searchResultMarker.size(); ++i) {
                                 mapView.removePOIItem(searchResultMarker.get(i));
                             }
                             searchResultMarker = null;
                         }
                         searchResultMarker = new ArrayList<>();
 
-                        for(int i = 0; i < addressList.size(); ++i) {
+                        for (int i = 0; i < addressList.size(); ++i) {
                             double lat, lon;
                             try {
                                 List<Address> list = geocoder.getFromLocationName(addressList.get(i), 10);
-                                if(list != null && list.size() != 0) {
+                                if (list != null && list.size() != 0) {
                                     Address address = list.get(0);
                                     lat = address.getLatitude();
                                     lon = address.getLongitude();
@@ -230,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                     MapPOIItem newPin = new MapPOIItem();
                                     newPin.setItemName("Custom Marker");
                                     newPin.setTag(2);
-                                    newPin.setMapPoint(MapPoint.mapPointWithGeoCoord(lat,lon));
+                                    newPin.setMapPoint(MapPoint.mapPointWithGeoCoord(lat, lon));
                                     newPin.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
                                     newPin.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
                                     newPin.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
@@ -249,51 +234,39 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
                     }
                 }
-              }
-        });
-/* Start from Dong hee
-                if(currentLocation == null){
-                    Toast.makeText(getApplicationContext(), "사용자 위치를 불러오는 중입니다.",Toast.LENGTH_LONG).show();
-                }else {
-                    Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
-                    intent_to_search.putExtra("x", Double.toString(currentLocation.getMapPointGeoCoord().longitude));
-                    intent_to_search.putExtra("y", Double.toString(currentLocation.getMapPointGeoCoord().latitude));
-                    startActivity(intent_to_search);
-                    overridePendingTransition(R.anim.fadein, R.anim.none);
-                }
             }
         });
 
-        toCurrentLocation = (ImageButton) findViewById(R.id.currentLocationButton);
+
+
+        toCurrentLocation =(ImageButton) findViewById(R.id.currentLocationButton);
         toCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick (View view){
                 mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-                CameraUpdate cameraUpdate= CameraUpdateFactory.newMapPoint(currentLocation);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(currentLocation);
                 mapView.moveCamera(cameraUpdate);
                 mapView.removeAllPOIItems();
-                Log.e("버튼","클릭");
+                Log.e("버튼", "클릭");
             }
         });
 
-        compassMode = (ImageButton) findViewById(R.id.compassModeButton);
+        compassMode =(ImageButton) findViewById(R.id.compassModeButton);
         compassMode.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick (View view){
                 mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithHeading);
-                CameraUpdate cameraUpdate= CameraUpdateFactory.newMapPoint(currentLocation);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(currentLocation);
                 mapView.moveCamera(cameraUpdate);
                 mapView.removeAllPOIItems();
-                Log.e("버튼","클릭");
+                Log.e("버튼", "클릭");
             }
         });
-
-    }End At: Dong hee*/
+    }
 
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
-        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-        }
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) { }
 
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
@@ -493,7 +466,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
         if(mapReverseGeoCoder == mapLongGeoCoder) {
-            pointAdrress = s;
+            pointAddress = s;
         } else {
             currentAddress = s;
         }
