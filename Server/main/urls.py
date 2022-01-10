@@ -17,11 +17,9 @@ from django.forms.models import ModelMultipleChoiceField
 from rest_framework import routers
 from django.contrib import admin
 from django.urls import path, include
-from area.views import AreaViewSet
 from area.views import get_area_by_senses
 
 router = routers.DefaultRouter()
-router.register('areas', AreaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -29,5 +27,5 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('accounts/', include('allauth.urls')),
-    path('areasearch/', get_area_by_senses, name='get_area_by_senses')
+    path('areaadd/', get_area_by_senses)
 ]
