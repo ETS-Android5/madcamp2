@@ -101,4 +101,4 @@ def search_area_by_senses(request):
             response = list(response.values())
             response = {"result":response}
 
-    return JsonResponse(response, safe=False)
+        return JsonResponse(response, safe=False)

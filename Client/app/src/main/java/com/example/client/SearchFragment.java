@@ -2,6 +2,7 @@ package com.example.client;
 
 import static com.example.client.LoginActivity.token;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -76,9 +78,15 @@ public class SearchFragment extends Fragment {
                     public void onResponse(Call<Review> call, Response<Review> response) {
                         if(response.isSuccessful()) {
                             List<Area> result = response.body().getResult();
+                            ArrayList<String> addressList = new ArrayList<>();
                             for(int i= 0; i < result.size(); ++i) {
-                                Log.d("Area Check", result.get(i).getAddress());
+                                addressList.add(result.get(i).getAddress());
                             }
+                            Intent intent = new Intent();
+                            intent.putExtra("CallType", 0);
+                            intent.putExtra("address", addressList);
+                            getActivity().setResult(getActivity().RESULT_OK, intent);
+                            Log.d("LifeCycleCheck", "Before getActivity");
                             getActivity().finish();
                         } else {
                             Toast.makeText(getActivity(), "Area Add Fail", Toast.LENGTH_SHORT);

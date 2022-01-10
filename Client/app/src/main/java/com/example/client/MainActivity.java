@@ -1,5 +1,9 @@
 package com.example.client;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +17,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -34,6 +40,7 @@ import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -51,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private MapReverseGeoCoder mapLongGeoCoder, mapCurrentGeoCoder;
     private MapPoint currentPoint;
     private MapPOIItem longClickMarker, searchEngineMarker;
+    private ArrayList<MapPOIItem> searchResultMarker;
+    private ActivityResultLauncher<Intent> resultLauncher;
+    private final Geocoder geocoder = new Geocoder(MainActivity.this);
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -133,8 +143,61 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
                 Log.d("Current", currentAddress);
                 intent_to_search.putExtra("current", currentAddress);
-                startActivity(intent_to_search);
+                resultLauncher.launch(intent_to_search);
+                // startActivity(intent_to_search);
                 overridePendingTransition(R.anim.fadein, R.anim.none);
+            }
+        });
+
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if(result.getResultCode() == RESULT_OK) {
+                    Intent intent = result.getData();
+                    int CallType = intent.getIntExtra("CallType", 0);
+                    if(CallType == 0) {
+                        Log.d("return to Activity", "Returns");
+                        ArrayList<String> addressList = intent.getStringArrayListExtra("address");
+
+                        if(searchResultMarker != null) {
+                            for(int i = 0; i < searchResultMarker.size(); ++i) {
+                                mapView.removePOIItem(searchResultMarker.get(i));
+                            }
+                            searchResultMarker = null;
+                        }
+                        searchResultMarker = new ArrayList<>();
+
+                        for(int i = 0; i < addressList.size(); ++i) {
+                            double lat, lon;
+                            try {
+                                List<Address> list = geocoder.getFromLocationName(addressList.get(i), 10);
+                                if(list != null && list.size() != 0) {
+                                    Address address = list.get(0);
+                                    lat = address.getLatitude();
+                                    lon = address.getLongitude();
+
+                                    MapPOIItem newPin = new MapPOIItem();
+                                    newPin.setItemName("Custom Marker");
+                                    newPin.setTag(2);
+                                    newPin.setMapPoint(MapPoint.mapPointWithGeoCoord(lat,lon));
+                                    newPin.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                                    newPin.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+                                    newPin.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                                    newPin.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                                    newPin.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+                                    newPin.setCustomSelectedImageResourceId(R.drawable.pin);
+
+                                    searchResultMarker.add(newPin);
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        mapView.addPOIItems(searchResultMarker.toArray(new MapPOIItem[0]));
+                    } else {
+
+                    }
+                }
             }
         });
 
