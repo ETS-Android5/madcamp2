@@ -26,6 +26,18 @@ public class SearchDataClass {
         private String x;
         @SerializedName("y")
         private String y;
+        @SerializedName("distance")
+        private String distance;
+
+        public String getDistance() {
+            return distance;
+        }
+
+        public void setDistance(String distance) {
+            this.distance = distance;
+        }
+
+
 
         public String getX() {
             return x;

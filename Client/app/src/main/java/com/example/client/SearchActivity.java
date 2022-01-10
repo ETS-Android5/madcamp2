@@ -1,14 +1,17 @@
 package com.example.client;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -50,8 +54,10 @@ public class SearchActivity extends AppCompatActivity {
     private Chip chipCafe;
     private Chip chipCulture;
     private Switch toggleSwitch;
+    private String currentX;
+    private String currentY;
     private int searchMode = 0;
-    private FragmentContainerView fragmentContainerView;
+    private Button backToMainButton;
 
     private SearchAdapter searchAdapter;
 
@@ -63,6 +69,12 @@ public class SearchActivity extends AppCompatActivity {
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_search);
+
+
+        backToMainButton = (Button) findViewById(R.id.backToMainbutton);
+
+        currentX = getIntent().getExtras().getString("x");
+        currentY = getIntent().getExtras().getString("y");
 
         search =(SearchView) findViewById(R.id.search);
         search.setIconified(false);
@@ -149,9 +161,7 @@ public class SearchActivity extends AppCompatActivity {
                     searchMode = 1;
                     Log.i("토글","on");
                     fragmentManager = getSupportFragmentManager();
-
                     fragment = new SearchFragment();
-
                     transaction = fragmentManager.beginTransaction();
                     transaction.replace(R.id.fragmentContainerView, fragment).commitAllowingStateLoss();
 
@@ -166,6 +176,19 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+
+        backToMainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
     }
 
@@ -185,7 +208,9 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getSearchData()
     {
-        searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchCategory).enqueue(new Callback<SearchDataClass>() {
+        Log.e("currentX",currentX);
+        Log.e("currentY",currentY);
+        searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchCategory,currentX,currentY).enqueue(new Callback<SearchDataClass>() {
             @Override
             public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                 if (response.isSuccessful()) {

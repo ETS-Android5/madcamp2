@@ -10,7 +10,9 @@ public interface SearchAPI {
     Call<SearchDataClass> getSearchData(
             @Header("Authorization") String key,
             @Query("query") String query,
-            @Query("category_group_code") String category_group_code
+            @Query("category_group_code") String category_group_code,
+            @Query("x") String x,
+            @Query("y") String y
 
     );
 }
