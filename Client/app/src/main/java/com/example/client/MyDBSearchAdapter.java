@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,17 +35,13 @@ public class MyDBSearchAdapter extends RecyclerView.Adapter<MyDBSearchAdapter.Ho
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-
         int itemposition = position;
         holder.result.setText(new Gson().toJson(list.get(itemposition).getPlace_name()));
-
     }
-
 
     public int getItemCount() {
         return list.size();
     }
-
 
     public class Holder extends RecyclerView.ViewHolder {
 
@@ -55,7 +49,6 @@ public class MyDBSearchAdapter extends RecyclerView.Adapter<MyDBSearchAdapter.Ho
         public Holder(View view) {
             super(view);
             result = (TextView) view.findViewById(R.id.result);
-
         }
     }
 }

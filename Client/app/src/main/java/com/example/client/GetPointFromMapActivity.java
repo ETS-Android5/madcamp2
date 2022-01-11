@@ -31,10 +31,6 @@ public class GetPointFromMapActivity extends AppCompatActivity {
         mapView = new MapView(this);
         mapViewContainer = (ViewGroup) findViewById(R.id.getCenterMapView);
 
-        //mapView.setShowCurrentLocationMarker(true);
-        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        //mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
-
         mapViewContainer.addView(mapView);
 
         getAddressBtn = (Button)findViewById(R.id.getAddressBtn);

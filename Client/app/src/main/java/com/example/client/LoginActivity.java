@@ -11,27 +11,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.nhn.android.naverlogin.OAuthLogin;
-import com.nhn.android.naverlogin.OAuthLoginHandler;
-import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -92,17 +75,14 @@ public class LoginActivity extends AppCompatActivity {
                         if(response.isSuccessful()) {
                             token = response.body().getKey();
                             id = response.body().getUser();
-                            logInDebugText.setText(token);
+                            logInDebugText.setText("로그인 중");
                             Intent intent_to_main = new Intent(LoginActivity.this,MainActivity.class);
                             intent_to_main.putExtra("CallType",2);
                             intent_to_main.putExtra("signin_state",0);
                             intent_to_main.putExtra("id",id);
                             intent_to_main.putExtra("username",nameEditText.getText().toString());
 
-
-
                             setResult(Activity.RESULT_OK, intent_to_main);
-                            Log.d("LifeCycleCheck", "Before getActivity");
                             finish();
                         } else {
                             logInDebugText.setText("로그인 Fail");
@@ -126,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
                         if(response.isSuccessful()) {
-                            Log.d("LogOut", "onResponse: 성공");
                             token = "";
                             id = -1;
                             logInDebugText.setText("로그아웃");

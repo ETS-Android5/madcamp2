@@ -1,11 +1,8 @@
 package com.example.client;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -15,19 +12,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,7 +61,6 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         currentAddr = intent.getStringExtra("current");
-        Log.d("Current1", currentAddr);
 
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -85,13 +77,11 @@ public class SearchActivity extends AppCompatActivity {
         search.setIconified(false);
         search.setPadding(100,0,0,0);
 
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         searchAPI = retrofit.create(SearchAPI.class);
-
 
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
@@ -99,7 +89,6 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 getSearchData();
-
                 return true;
             }
 
@@ -120,9 +109,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 searchCategory="";
-                if(searchMode == 0) {
-                    getSearchData();
-                }
+                if(searchMode == 0) { getSearchData(); }
 
             }
         });
@@ -130,27 +117,21 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 searchCategory="FD6";
-                if(searchMode == 0) {
-                    getSearchData();
-                }
+                if(searchMode == 0) { getSearchData(); }
             }
         });
         chipCafe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchCategory="CE7";
-                if(searchMode == 0) {
-                    getSearchData();
-                }
+                if(searchMode == 0) { getSearchData(); }
             }
         });
         chipCulture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchCategory="CT1";
-                if(searchMode == 0) {
-                    getSearchData();
-                }
+                if(searchMode == 0) { getSearchData(); }
             }
         });
 
@@ -165,7 +146,6 @@ public class SearchActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
                     searchMode = 1;
-                    Log.i("토글","on");
                     fragmentManager = getSupportFragmentManager();
                     fragment = new SearchFragment();
 
@@ -178,7 +158,6 @@ public class SearchActivity extends AppCompatActivity {
 
                 }else{
                     searchMode = 0;
-                    Log.i("토글","off");
                     fragmentManager = getSupportFragmentManager();
                     recyclerviewFragment = new SearchRecyclerviewFragment();
                     transaction = fragmentManager.beginTransaction();
@@ -200,7 +179,6 @@ public class SearchActivity extends AppCompatActivity {
     public void onBackPressed(){
         super.onBackPressed();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
     }
 
     @Override
@@ -219,28 +197,19 @@ public class SearchActivity extends AppCompatActivity {
 
     public void getSearchData()
     {
-        Log.e("currentX",currentX);
-        Log.e("currentY",currentY);
         searchAPI.getSearchData(API_KEY, search.getQuery().toString(), searchCategory,currentX,currentY).enqueue(new Callback<SearchDataClass>() {
             @Override
             public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Test", "Raw: response.raw()");
-                    Log.d("Test", new Gson().toJson(response.body()));
-
                     recyclerView = findViewById(R.id.searchRecyclerview);
                     searchAdapter = new SearchAdapter(SearchActivity.this, response.body().getDocuments());
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplication()));
                     recyclerView.setAdapter(searchAdapter);
-                } else {
-                    Log.w("MainActivity", "통신 실패: ${t.message}");
-                }
+                } else { }
             }
 
             @Override
-            public void onFailure(Call<SearchDataClass> call, Throwable t) {
-                Log.w("MainActivity", "통신 실패: ${t.message}");
-            }
+            public void onFailure(Call<SearchDataClass> call, Throwable t) { }
         });
     }
 }

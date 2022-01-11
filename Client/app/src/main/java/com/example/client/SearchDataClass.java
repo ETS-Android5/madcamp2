@@ -37,8 +37,6 @@ public class SearchDataClass {
             this.distance = distance;
         }
 
-
-
         public String getX() {
             return x;
         }

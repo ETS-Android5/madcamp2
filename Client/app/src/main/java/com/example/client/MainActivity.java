@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,14 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +33,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
-
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.CameraUpdate;
 import net.daum.mf.map.api.CameraUpdateFactory;
@@ -49,8 +42,6 @@ import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             }
         });
 
-
-
         search = (Button) findViewById(R.id.search);
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     Toast.makeText(getApplicationContext(),"사용자 위치를 불러오는 중입니다.",Toast.LENGTH_LONG).show();
                 }else {
                     Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
-                    Log.d("Current", currentAddress);
                     intent_to_search.putExtra("current", currentAddress);
                     intent_to_search.putExtra("x", Double.toString(currentLocation.getMapPointGeoCoord().longitude));
                     intent_to_search.putExtra("y", Double.toString(currentLocation.getMapPointGeoCoord().latitude));
@@ -187,8 +175,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
                         mapViewContainer.addView(mapView);
 
-
-                        Log.d("return to Activity", "Returns");
                         ArrayList<String> addressList = intent.getStringArrayListExtra("address");
 
                         if (searchResultMarker != null) {
@@ -211,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                     if(i == 0) {
                                         currentLocation = MapPoint.mapPointWithGeoCoord(lat, lon);
                                     }
-
                                     MapPOIItem newPin = new MapPOIItem();
                                     newPin.setItemName("Custom Marker");
                                     newPin.setTag(3);
@@ -238,8 +223,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         x = intent.getExtras().getString("x");
                         y = intent.getExtras().getString("y");
                         placeName = intent.getExtras().getString("place_name");
-                        Log.i("x", x);
-                        Log.i("y", y);
+
                         double a = Double.parseDouble(x);
                         double b = Double.parseDouble(y);
                         pinAddress.setText(placeName);
@@ -255,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
                         searchEngineMarker= new MapPOIItem();
                         searchEngineMarker.setItemName("Custom Marker");
-                        searchEngineMarker.setTag(2);
+                        searchEngineMarker.setTag(1);
                         MapPoint mp = MapPoint.mapPointWithGeoCoord(b, a);
                         searchEngineMarker.setMapPoint(mp);
                         searchEngineMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
@@ -279,13 +263,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         bundle.putInt("signin_state", 0 );
                         fragment.setArguments(bundle);
 
-
-
                         loginSideMenuFragment = new LoginSideMenuFragment();
                         fragmentManager = getSupportFragmentManager();
                         transaction = fragmentManager.beginTransaction();
                         transaction.replace(R.id.userStateContainerview, loginSideMenuFragment).commitAllowingStateLoss();
-
                     }
                 }
             }
@@ -301,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(currentLocation);
                 mapView.moveCamera(cameraUpdate);
                 mapView.removeAllPOIItems();
-                Log.e("버튼", "클릭");
             }
         });
 
@@ -313,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(currentLocation);
                 mapView.moveCamera(cameraUpdate);
                 mapView.removeAllPOIItems();
-                Log.e("버튼", "클릭");
             }
         });
     }
@@ -329,17 +308,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 toLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
                         Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
                         resultLauncher.launch(intent_to_login);
-
                     }
                 });
-            } else
-            {
-
-            }
+            } else { }
         }
 
         @Override
@@ -392,7 +365,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         }
                     }
                 }
-
                 if (isDeny) {
                     showNoPermissionToastAndFinish();
                 }
@@ -401,25 +373,16 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     }
 
     @Override
-    public void onMapViewInitialized(MapView mapView) {
-        Log.i("디테일로그", "onMapViewInitialized");
-
-
-    }
+    public void onMapViewInitialized(MapView mapView) { }
 
     @Override
-    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewCenterPointMoved");
-    }
+    public void onMapViewCenterPointMoved(MapView mapView, MapPoint mapPoint) { }
 
     @Override
-    public void onMapViewZoomLevelChanged(MapView mapView, int i) {
-        Log.i("디테일로그", "onMapViewZoomLevelChanged");
-    }
+    public void onMapViewZoomLevelChanged(MapView mapView, int i) {}
 
     @Override
     public void onMapViewSingleTapped(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewSingleTapped");
         mapView.removeAllPOIItems();
         if(currentLocation == null){
             Toast.makeText(getApplicationContext(), "사용자 위치를 불러오는 중입니다.",Toast.LENGTH_LONG).show();
@@ -431,9 +394,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     }
 
     @Override
-    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewDoubleTapped");
-    }
+    public void onMapViewDoubleTapped(MapView mapView, MapPoint mapPoint) { }
 
     @Override
     public void onMapViewLongPressed(MapView mapView, MapPoint mapPoint) {
@@ -464,19 +425,14 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onMapViewDragStarted(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewDragStarted");
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
     }
 
     @Override
-    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewDragEnded");
-    }
+    public void onMapViewDragEnded(MapView mapView, MapPoint mapPoint) { }
 
     @Override
-    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) {
-        Log.i("디테일로그", "onMapViewMoveFinished");
-    }
+    public void onMapViewMoveFinished(MapView mapView, MapPoint mapPoint) { }
 
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
@@ -513,23 +469,16 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         currentLocation = mapPoint;
         //mapCurrentGeoCoder = new MapReverseGeoCoder(APPKEY, currentLocation, this, this);
         //mapCurrentGeoCoder.startFindingAddress();
-
     }
 
     @Override
-    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
-
-    }
+    public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) { }
 
     @Override
-    public void onCurrentLocationUpdateFailed(MapView mapView) {
-
-    }
+    public void onCurrentLocationUpdateFailed(MapView mapView) { }
 
     @Override
-    public void onCurrentLocationUpdateCancelled(MapView mapView) {
-
-    }
+    public void onCurrentLocationUpdateCancelled(MapView mapView) { }
 
     @Override
     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
@@ -538,16 +487,12 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         } else {
             currentAddress = s;
         }
-        Log.i("검색된 주소",  s);
-
         pointAddress = s;
         getPlaceNameByCoord();
     }
 
     @Override
-    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) {
-
-    }
+    public void onReverseGeoCoderFailedToFindAddress(MapReverseGeoCoder mapReverseGeoCoder) { }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -565,7 +510,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     public void getPlaceNameByCoord()
     {
-
         retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -576,8 +520,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             @Override
             public void onResponse(Call<SearchDataClass> call, Response<SearchDataClass> response) {
                 if (response.isSuccessful()) {
-                    //Log.d("Test", "Raw: response.raw()");
-                    //Log.d("Test", new Gson().toJson(response.body()));
                     if(response.body().getDocuments().size() == 0)
                     {
                         placeName="관sffddfwe련 정보ewf가 없습few니다.";
@@ -589,14 +531,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         getImageByPlaceName();
                         pinAddress.setText(placeName);
                     }
-                } else {
-                    Log.w("MainActivity", "통신 실패: ${t.message}");
-                }
+                } else { }
             }
 
             @Override
             public void onFailure(Call<SearchDataClass> call, Throwable t) {
-                Log.w("MainActivity", "통신 실패: ${t.message}");
             }
         });
     }
@@ -609,13 +548,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 .build();
         imageSearchAPI = retrofit.create(ImageSearchAPI.class);
 
-        Log.e("placeName",placeName);
         imageSearchAPI.getImageSearchData(API_KEY, placeName).enqueue(new Callback<ImageSearchDataClass>() {
             @Override
             public void onResponse(Call<ImageSearchDataClass> call, Response<ImageSearchDataClass> response) {
                 if (response.isSuccessful()) {
-                    //Log.d("Test", "Raw: response.raw()");
-                    //Log.d("Test", new Gson().toJson(response.body()));
 
                     imageRecyclerview = findViewById(R.id.PinImageRecyclerview);
                     imagesearchAdapter = new ImageSearchAdapter(getApplicationContext(), response.body().getDocuments());
@@ -624,14 +560,13 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     imageRecyclerview.setLayoutManager(layoutManager);
                     imageRecyclerview.setAdapter(imagesearchAdapter);
                 } else {
-                    Log.w("MainActivity", "통신 실패: ${t.message}");
 
                 }
             }
 
             @Override
             public void onFailure(Call<ImageSearchDataClass> call, Throwable t) {
-                Log.w("MainActivity", "통신 실패: ${t.message}");
+
             }
         });
     }
@@ -640,20 +575,16 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         private final View mCalloutBalloon;
 
         public CustomCalloutBalloonAdapter() {
-            Log.i("디테일로그", "CustomCalloutBallonAdapter");
             mCalloutBalloon = getLayoutInflater().inflate(R.layout.custom_callout_balloon, null);
         }
 
         @Override
         public View getCalloutBalloon(MapPOIItem poiItem) {
-            Log.i("디테일로그", "getCalloutBalloon");
-
             return mCalloutBalloon;
         }
 
         @Override
         public View getPressedCalloutBalloon(MapPOIItem poiItem) {
-
             return null;
         }
     }

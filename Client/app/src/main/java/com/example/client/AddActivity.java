@@ -1,24 +1,19 @@
 package com.example.client;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-
 import static com.example.client.LoginActivity.token;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -122,10 +117,6 @@ public class AddActivity extends AppCompatActivity {
                 int touchIdx = chipGroupTouch.getCheckedChipId();
                 int tasteIdx = chipGroupTaste.getCheckedChipId();
 
-                Log.d("ChipCheck", Integer.toString(sightIdx));
-                Log.d("ChipCheck", Integer.toString(touchIdx));
-                Log.d("ChipCheck", Integer.toString(tasteIdx));
-
                 Review review = new Review(area, sightIdx, touchIdx, tasteIdx);
 
                 reviewServiceApi.reviewPost(review).enqueue(new Callback<Review>() {
@@ -136,17 +127,12 @@ public class AddActivity extends AppCompatActivity {
                             finish();
                         } else {
                             Toast.makeText(AddActivity.this, "Area Add Fail", Toast.LENGTH_SHORT);
-                            try {
-                                Log.d("AreaAddRespone", response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Review> call, Throwable t) {
-                        Log.d("AreaAddRespone", "something wrong");
+
                     }
                 });
             }

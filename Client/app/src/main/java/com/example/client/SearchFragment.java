@@ -3,14 +3,11 @@ package com.example.client;
 import static android.app.Activity.RESULT_OK;
 import static com.example.client.LoginActivity.token;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +59,6 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("FragmentLifeCycle", "OnCreateView");
         View view = inflater.inflate(R.layout.fragment_mydbsearch, container, false);
         if(getArguments() != null) {
             address = getArguments().getString("address");
@@ -87,32 +83,23 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onResponse(Call<Review> call, Response<Review> response) {
                         if(response.isSuccessful()) {
-                            Log.d("Address Response", "Now get response!");
                             List<Area> result = response.body().getResult();
                             ArrayList<String> addressList = new ArrayList<>();
                             for(int i= 0; i < result.size(); ++i) {
                                 addressList.add(result.get(i).getAddress());
-                                Log.d("Address List", addressList.get(i));
                             }
                             Intent intent = new Intent();
                             intent.putExtra("CallType", 0);
                             intent.putExtra("address", addressList);
                             getActivity().setResult(RESULT_OK, intent);
-                            Log.d("LifeCycleCheck", "Before getActivity");
                             getActivity().finish();
                         } else {
                             Toast.makeText(getActivity(), "Area Add Fail", Toast.LENGTH_SHORT);
-                            try {
-                                Log.d("AreaAddRespone", response.errorBody().string());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Review> call, Throwable t) {
-                        Log.d("AreaAddRespone", "something wrong");
                     }
                 });
             }
@@ -147,8 +134,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void setViewsById(View view) {
-
-        Log.d("FragmentLifeCycle", "setViewsById");
         addressText = (TextView)view.findViewById(R.id.searchAddressTextView);
         querySendBtn = (ImageButton)view.findViewById(R.id.sendSearchQueryBtn);
         addressChangeBtn = (ImageButton)view.findViewById(R.id.searchAddressChangeBtn);
@@ -158,8 +143,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void setViewInfo() {
-        Log.d("FragmentLifeCycle", "setViewInfo");
-
         if(address != null && addressText != null ) {
             addressText.setText(address);
 

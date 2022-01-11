@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,13 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,7 +73,6 @@ public class SignupActivity extends AppCompatActivity {
                    public void onResponse(Call<LoginDataClass> call, Response<LoginDataClass> response) {
                        if(response.isSuccessful()){
                            Toast.makeText(SignupActivity.this, "Sign In Complete", Toast.LENGTH_SHORT).show();
-                           Log.d("SignIn", "onResponse: 성공");
                            finish();
                        }
                        else{
@@ -97,8 +87,7 @@ public class SignupActivity extends AppCompatActivity {
                    }
 
                    @Override
-                   public void onFailure(Call<LoginDataClass> call, Throwable t) {
-                   }
+                   public void onFailure(Call<LoginDataClass> call, Throwable t) { }
                });
 
             }

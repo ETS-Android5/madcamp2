@@ -1,7 +1,6 @@
 package com.example.client;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +23,9 @@ public class LoginSideMenuFragment extends Fragment {
         if (getArguments() != null) {
             username.setText(getArguments().getString("username","0"));
         } else {
-            Log.e("번들 l", "전달실패");
+
         }
         return view;
     }
 
-    @Override
-    public void onResume() {
-
-        super.onResume();
-
-
-
-    }
 }
