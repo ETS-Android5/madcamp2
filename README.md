@@ -130,8 +130,8 @@ override 해 새로 정의할 필요가 있었습니다.
 
 ## 7. Map View
 카카오 지도 SDK 를 이용해 지도 기능을 구현하였습니다.
-현재 제공되는 기능으로는 맵에 마커를 표시하여 건물명 검색, 건물명(상호명)과 관련된 이미지 검색, 현재 위치로 이동, 나침반 모드, 키워드로 검색이 있습니다. 현
-
+현재 제공되는 기능으로는 맵에 마커를 표시하여 건물명 검색, 건물명(상호명)과 관련된 이미지 검색, 현재 위치로 이동, 나침반 모드, 키워드로 검색이 있습니다. 앱을 처음 실행하면 setCurrentLocationTrackingMode 를 TrackinModeOnWithoutHeading 으로 설정해 곧바로 현재 위치로 카메라가 이동되게 하였습니다. 화면을 길게 누르면 맵에 마커가 표시되는데, 마커의 위치가 좌표 객체의 형태로 저장됩니다. 좌표객체에서 startFindingAddress 메소드에서 주소 문자열을 받아옵니다. 그 뒤 카카오 로컬 REST API 에 주소를 보내 상호명을 얻어 MapView 밑 sliding panel 에 표시되게 하였습니다. 상호명과 관련된 이미지 검색은 다음 검색 REST API로 표시되는 이미지 URL 을 Glide 를 이용해 표현하였습니다. 현재 위치로 이동 기능은 ImageButton에 OnclickListener 를 등록해 트리거 시  setCurrentLocationTrackingMode 를 TrackinModeOnWithoutHeading로 한 뒤 cameraUpdate 에 현재 좌표를 제공하여 돌아가도록 하였습니다. 나침반 모드도 비슷하게 setCurrentLocationTrackingMode 를 TrackinModeOnWithHeading 으로 설정한 뒤 cameraUpdate 를 하였습니다. 키워드로 검색 기능은 MapView 상단 검색 바를 클릭하면 이용할 수 있습니다. 검색하고자 하는 키워드를 입력하면 카카오 로컬 REST API 에서 연관순으로 검색 결과를 RecyclerView로 보여줍니다. RecyclerView item 을 클릭하면 해당 item 의 지도상 좌표를 MapView 에 표시합니다.
+ 
 
 
 ## 8. License
