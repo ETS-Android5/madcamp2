@@ -1,5 +1,6 @@
 package com.example.client;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -92,6 +93,16 @@ public class LoginActivity extends AppCompatActivity {
                             token = response.body().getKey();
                             id = response.body().getUser();
                             logInDebugText.setText(token);
+                            Intent intent_to_main = new Intent(LoginActivity.this,MainActivity.class);
+                            intent_to_main.putExtra("CallType",2);
+                            intent_to_main.putExtra("signin_state",0);
+                            intent_to_main.putExtra("id",id);
+
+
+
+                            setResult(Activity.RESULT_OK, intent_to_main);
+                            Log.d("LifeCycleCheck", "Before getActivity");
+                            finish();
                         } else {
                             logInDebugText.setText("로그인 Fail");
                         }
