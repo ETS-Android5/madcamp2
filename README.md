@@ -25,8 +25,10 @@ reviewing the world only use 3-sense
 </p>
 <p></p>
 어플을 사용하기 위해서는 회원가입이 필요합니다.      
+
 Django의 회원 관리 라이브러리인 "rest-auth"를 사용해 구현했습니다.       
 인증 방식은 rest-framework의 Token Authorization이며, 토큰의 기간은 없습니다.       
+
 로그인 후 받아온 토큰 키를 header에 넣어 쉽게 인증할 수 있습니다.          
 
 ```python
