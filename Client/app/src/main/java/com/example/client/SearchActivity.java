@@ -229,7 +229,7 @@ public class SearchActivity extends AppCompatActivity {
                     Log.d("Test", new Gson().toJson(response.body()));
 
                     recyclerView = findViewById(R.id.searchRecyclerview);
-                    searchAdapter = new SearchAdapter(getApplicationContext(), response.body().getDocuments());
+                    searchAdapter = new SearchAdapter(SearchActivity.this, response.body().getDocuments());
                     recyclerView.setLayoutManager(new LinearLayoutManager(getApplication()));
                     recyclerView.setAdapter(searchAdapter);
                 } else {

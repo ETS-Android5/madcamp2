@@ -58,8 +58,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
-
-
+    
     private final String URL = "https://dapi.kakao.com/";
     private final String API_KEY = "KakaoAK 5c2c8b4f5e2f6a5f1a1c673de30c7bf8";
 
@@ -118,46 +117,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
 
         mapViewContainer.addView(mapView);
-        //getHashKey();
-
-
-        Intent intent = getIntent();
-        Bundle extra = intent.getExtras();
-        if (extra != null) {
-            Log.i("intent", "받음");
-
-
-            x = intent.getExtras().getString("x");
-            y = intent.getExtras().getString("y");
-            placeName = intent.getExtras().getString("place_name");
-            Log.i("x", x);
-            Log.i("y", y);
-            double a = Double.parseDouble(x);
-            double b = Double.parseDouble(y);
-            pinAddress.setText(placeName);
-            getImageByPlaceName();
-
-            //y = Double.parseDouble(intent.getExtras().getString("y"));
-
-            mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
-            MapPOIItem customMarker = new MapPOIItem();
-            customMarker.setItemName("Custom Marker");
-            customMarker.setTag(2);
-            MapPoint mp = MapPoint.mapPointWithGeoCoord(b, a);
-            customMarker.setMapPoint(mp);
-            customMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
-            customMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
-            customMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
-            customMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
-            customMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
-            customMarker.setCustomSelectedImageResourceId(R.drawable.pin);
-
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(mp);
-            mapView.moveCamera(cameraUpdate);
-
-            mapView.removeAllPOIItems();
-            mapView.addPOIItem(customMarker);
-        }
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
@@ -179,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
                 Log.d("Current", currentAddress);
                 intent_to_search.putExtra("current", currentAddress);
+                intent_to_search.putExtra("x", Double.toString(currentLocation.getMapPointGeoCoord().longitude));
+                intent_to_search.putExtra("y", Double.toString(currentLocation.getMapPointGeoCoord().latitude));
                 resultLauncher.launch(intent_to_search);
                 // startActivity(intent_to_search);
                 overridePendingTransition(R.anim.fadein, R.anim.none);
@@ -214,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
                                     MapPOIItem newPin = new MapPOIItem();
                                     newPin.setItemName("Custom Marker");
-                                    newPin.setTag(2);
+                                    newPin.setTag(3);
                                     newPin.setMapPoint(MapPoint.mapPointWithGeoCoord(lat, lon));
                                     newPin.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
                                     newPin.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
@@ -230,8 +191,40 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                             }
                         }
                         mapView.addPOIItems(searchResultMarker.toArray(new MapPOIItem[0]));
-                    } else {
+                    } else if(CallType == 1) {
+                        x = intent.getExtras().getString("x");
+                        y = intent.getExtras().getString("y");
+                        placeName = intent.getExtras().getString("place_name");
+                        Log.i("x", x);
+                        Log.i("y", y);
+                        double a = Double.parseDouble(x);
+                        double b = Double.parseDouble(y);
+                        pinAddress.setText(placeName);
+                        getImageByPlaceName();
 
+                        //y = Double.parseDouble(intent.getExtras().getString("y"));
+
+                        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
+                        if(searchResultMarker != null) {
+                            mapView.removePOIItem(searchEngineMarker);
+                            searchResultMarker = null;
+                        }
+
+                        searchEngineMarker= new MapPOIItem();
+                        searchEngineMarker.setItemName("Custom Marker");
+                        searchEngineMarker.setTag(2);
+                        MapPoint mp = MapPoint.mapPointWithGeoCoord(b, a);
+                        searchEngineMarker.setMapPoint(mp);
+                        searchEngineMarker.setMarkerType(MapPOIItem.MarkerType.CustomImage); // 마커타입을 커스텀 마커로 지정.
+                        searchEngineMarker.setCustomImageResourceId(R.drawable.pin_blue); // 마커 이미지.
+                        searchEngineMarker.setCustomImageAutoscale(false); // hdpi, xhdpi 등 안드로이드 플랫폼의 스케일을 사용할 경우 지도 라이브러리의 스케일 기능을 꺼줌.
+                        searchEngineMarker.setCustomImageAnchor(0.5f, 1.0f); // 마커 이미지중 기준이 되는 위치(앵커포인트) 지정 - 마커 이미지 좌측 상단 기준 x(0.0f ~ 1.0f), y(0.0f ~ 1.0f) 값.
+                        searchEngineMarker.setSelectedMarkerType(MapPOIItem.MarkerType.CustomImage);
+                        searchEngineMarker.setCustomSelectedImageResourceId(R.drawable.pin);
+
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(mp);
+                        mapView.moveCamera(cameraUpdate);
+                        mapView.addPOIItem(searchEngineMarker);
                     }
                 }
             }
@@ -424,9 +417,15 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
-        Intent intent_to_add = new Intent(MainActivity.this, AddActivity.class);
-        intent_to_add.putExtra("pointAdress",pointAddress);
-        startActivity(intent_to_add);
+        if(mapPOIItem.getTag() == 1) {
+            Intent intent_to_add = new Intent(MainActivity.this, AddActivity.class);
+            intent_to_add.putExtra("pointAdress",pointAddress);
+            startActivity(intent_to_add);
+        } else if(mapPOIItem.getTag() == 2)  {
+
+        } else if(mapPOIItem.getTag() == 3)  {
+
+        }
     }
 
     @Override

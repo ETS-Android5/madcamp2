@@ -1,5 +1,6 @@
 package com.example.client;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -60,8 +61,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Holder> {
                 intent_to_mainactivity.putExtra("y",list.get(itemposition).getY());
                 Log.d("y",list.get(itemposition).getY());
                 intent_to_mainactivity.putExtra("place_name",list.get(itemposition).getPlace_name());
-                intent_to_mainactivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent_to_mainactivity);
+                intent_to_mainactivity.putExtra("CallType", 1);
+
+                ((SearchActivity)context).setResult(Activity.RESULT_OK, intent_to_mainactivity);
+                ((SearchActivity)context).finish();
+
+                // intent_to_mainactivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // context.startActivity(intent_to_mainactivity);
+
             }
         });
         holder.range.setText(list.get(itemposition).getDistance());

@@ -2,6 +2,7 @@ package com.example.client;
 
 import static com.example.client.LoginActivity.token;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,8 +48,8 @@ public class SearchFragment extends Fragment {
 
     private Retrofit retrofit;
     private ReviewServiceApi reviewServiceApi;
-    private final String serverURL = "http://192.168.77.245/";
-    // private final String serverURL = "http://192.249.18.111/";
+    //private final String serverURL = "http://192.168.77.245/";
+    private final String serverURL = "http://192.249.18.111/";
 
     @Nullable
     @Override
@@ -86,7 +87,7 @@ public class SearchFragment extends Fragment {
                             Intent intent = new Intent();
                             intent.putExtra("CallType", 0);
                             intent.putExtra("address", addressList);
-                            getActivity().setResult(getActivity().RESULT_OK, intent);
+                            getActivity().setResult(Activity.RESULT_OK, intent);
                             Log.d("LifeCycleCheck", "Before getActivity");
                             getActivity().finish();
                         } else {
