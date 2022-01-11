@@ -5,6 +5,9 @@ Assignment 2 week
 ## 0. Project Name   
 ### 3-sense Map   
 reviewing the world only use 3-sense   
+
+[admin page](http://192.249.18.111/admin/)    
+[root page](http://192.249.18.111/)     
    
 ## 1. Member
 - Jeon SeungYoon   
