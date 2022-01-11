@@ -1,5 +1,6 @@
 package com.example.client;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.client.LoginActivity.token;
 
 import android.app.Activity;
@@ -13,6 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -42,7 +47,7 @@ public class SearchFragment extends Fragment {
     private String address, city, county, last;
 
     private TextView addressText;
-    private Button querySendBtn;
+    private Button querySendBtn, addressChangeBtn;
     private ChipGroup chipGroupSight, chipGroupTaste, chipGroupTouch;
     private Chip chip;
 
@@ -50,6 +55,8 @@ public class SearchFragment extends Fragment {
     private ReviewServiceApi reviewServiceApi;
     //private final String serverURL = "http://192.168.77.245/";
     private final String serverURL = "http://192.249.18.111/";
+
+    private ActivityResultLauncher<Intent> resultLauncher;
 
     @Nullable
     @Override
@@ -87,7 +94,7 @@ public class SearchFragment extends Fragment {
                             Intent intent = new Intent();
                             intent.putExtra("CallType", 0);
                             intent.putExtra("address", addressList);
-                            getActivity().setResult(Activity.RESULT_OK, intent);
+                            getActivity().setResult(RESULT_OK, intent);
                             Log.d("LifeCycleCheck", "Before getActivity");
                             getActivity().finish();
                         } else {
@@ -108,6 +115,31 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        addressChangeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), GetPointFromMapActivity.class);
+                resultLauncher.launch(intent);
+            }
+        });
+
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    Intent intent = result.getData();
+                    address = intent.getStringExtra("Address");
+                    addressText.setText(address);
+                    String[] splits = address.split("\\s", 3);
+                    city = splits[0];
+                    county = splits[1];
+                    last = splits[2];
+                } else {
+                    Toast.makeText(getActivity(), "Something wrong with activity back!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return view;
     }
 
@@ -116,7 +148,7 @@ public class SearchFragment extends Fragment {
         Log.d("FragmentLifeCycle", "setViewsById");
         addressText = (TextView)view.findViewById(R.id.searchAddressTextView);
         querySendBtn = (Button)view.findViewById(R.id.sendSearchQueryBtn);
-
+        addressChangeBtn = (Button)view.findViewById(R.id.searchAddressChangeBtn);
         chipGroupSight = (ChipGroup)view.findViewById(R.id.chipGroupSearchSight);
         chipGroupTouch = (ChipGroup)view.findViewById(R.id.chipGroupSearchTouch);
         chipGroupTaste = (ChipGroup)view.findViewById(R.id.chipGroupSearchTaste);

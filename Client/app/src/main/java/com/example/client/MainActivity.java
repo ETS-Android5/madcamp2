@@ -58,7 +58,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
-    
+
     private final String URL = "https://dapi.kakao.com/";
     private final String API_KEY = "KakaoAK 5c2c8b4f5e2f6a5f1a1c673de30c7bf8";
 
