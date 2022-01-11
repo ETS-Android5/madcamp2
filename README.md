@@ -54,7 +54,6 @@ Django의 회원 관리 라이브러리인 "rest-auth"를 사용해 구현했습
     REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'accounts.serializer.TokenSerializer',
     }
-}
 ```
 다음과 같이 settings.py를 지정하여 rest-framework로 구성된 Sign-up/Login endpoint를 만들 수 있습니다.
 
