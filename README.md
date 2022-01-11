@@ -128,8 +128,10 @@ override 해 새로 정의할 필요가 있었습니다.
 
 [이 링크](https://github.com/BUYA-GH/madcamp2/blob/master/Server1/reviews/views.py)에서 정확한 동작을 확인할 수 있습니다.   
 
-## 7. Search View
-받아서 적어야됨
+## 7. Map View
+카카오 지도 SDK 를 이용해 지도 기능을 구현하였습니다.
+현재 제공되는 기능으로는 맵에 마커를 표시하여 건물명 검색, 건물명(상호명)과 관련된 이미지 검색, 현재 위치로 이동, 나침반 모드, 키워드로 검색이 있습니다. 현
+
 
 
 ## 8. License
