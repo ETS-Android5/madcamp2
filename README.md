@@ -14,11 +14,126 @@ reviewing the world only use 3-sense
 - Client : App which made by "Android Studio"   
 - Server : Backend server which made by "Django"   
 
-## 3. App
+## 3. Applications
 4만 개의 단어 중 3단어의 조합으로 주소를 나타내는 주소 체계 "W3W"에서 아이디어를 착안해   
 각종 식당이나 카페, 시설 등을 오로지 3가지의 단어로만 리뷰해 등록하는 어플을 제작했습니다.   
 
-## 6. License
+## 4. Member Account
+<p>
+    <img src="./image/gif/1.gif" width="30%">
+</p>
+<p></p>
+어플을 사용하기 위해서는 회원가입이 필요합니다.   
+Django의 회원 관리 라이브러리인 "rest-auth"를 사용해 구현했습니다.   
+인증 방식은 rest-framework의 Token Authorization이며, 토큰의 기간은 없습니다.   
+로그인 후 받아온 토큰 키를 header에 넣어 쉽게 인증할 수 있습니다.
+
+```python
+    # settings.py
+    INSTALLED_APPS = [
+        '...',
+        'rest_framework',
+        'rest_framework.authtoken',
+        'rest_auth',
+        'django.contrib.sites',
+        'allauth',
+        'allauth.account',
+        'rest_auth.registration',
+        'allauth.socialaccount',
+        'allauth.socialaccount.providers.naver'
+    ]
+
+    REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES' : (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework.authentication.TokenAuthentication',
+        ), 
+    }
+    REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'accounts.serializer.TokenSerializer',
+    }
+}
+```
+다음과 같이 settings.py를 지정하여 rest-framework로 구성된 Sign-up/Login endpoint를 만들 수 있습니다.
+
+## 5. Post reviews
+방문한 곳에 대한 리뷰는 3개의 단어로 이루어져 있습니다.   
+그러나 사용자에게 원할한 리뷰와 정보 제공을 위해    
+단어 선택에서 제한을 두고 있습니다.   
+<p>
+    <img src="./image/gif/2.gif" width="30%">
+</p>
+<p></p>
+선택 가능한 단어는 감각 표현입니다.   
+시각 - 촉각 - 미각 으로 이루어져있으며   
+후각과 청각은 많은 선택지를 주지 못할 것으로 생각해 제외했습니다.   
+
+입력한 정보는 서버의 백엔드로 전송되어 저장되며   
+db의 model 구성은 다음과 같습니다.   
+
+```python
+    # reviews/models.py
+    class Area(models.Model):
+        city = models.CharField(max_length=20)
+        county = models.CharField(max_length=20)
+        last = models.CharField(max_length=40)
+
+    class Review(models.Model):
+        area = models.ForeignKey(Area, on_delete=models.CASCADE)
+        sight = models.IntegerField(choices=SightType.choices)
+        touch = models.IntegerField(choices=TouchType.choices)
+        taste = models.IntegerField(choices=TasteType.choices)
+```
+
+하나의 지역은 여러 개의 리뷰를 가질 수 있기 때문에    
+1대 n 를 구현 가능한 ForeignKey를 사용했습니다.   
+
+이 때문에 serializer를 통해 자동으로 만들어지는 create() 함수를   
+override 해 새로 정의할 필요가 있었습니다.   
+
+```python
+    # reviews\serializer.py
+
+    def create(self, validated_data):
+        area_data = validated_data.pop('area')
+        if not Area.objects.filter(
+                city = area_data['city']
+            ).filter(
+                county = area_data['county']
+            ).filter(
+                last = area_data['last']
+            ).exists() :
+            area = Area.objects.create(**area_data)
+        else:
+            area = Area.objects.get(city = area_data['city'], county = area_data['county'], last = area_data['last'])
+
+        validated_data['area'] = area
+        review = Review.objects.create(**validated_data)
+
+        return review
+```
+
+## 6. Sense Search
+<p>
+    <img src="./image/gif/3.gif" width="30%">
+</p>
+<p></p>
+요청한 감각 선택에 따라 현재의 위치 주위에 있는 지역을 추천합니다.   
+기반이 되는 데이터는 사용자가 올린 리뷰들이며   
+각 지역별로 가장 많은 선택을 받은 감각들이 그 지역을 나타내는 감각이 됩니다.   
+
+이를 계산 하기 위해 Django의 ORM 대신 custom한 sql문을 사용했으며    
+의도한 대로 결과를 낼 수 있습니다.   
+
+[이 링크](https://github.com/BUYA-GH/madcamp2/blob/master/Server1/reviews/views.py)에서 정확한 동작을 확인할 수 있습니다.   
+
+## 7. Search View
+받아서 적어야됨
+
+
+## 8. License
 ```
     Copyright [2021] [BUYA-GH, hye1ee]
 
