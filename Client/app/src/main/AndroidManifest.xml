@@ -2,25 +2,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.client">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".GetPointFromMapActivity"
+            android:exported="false"
+            android:theme="@style/FullScreenTheme"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustNothing"
-            android:theme="@style/FullScreenTheme">
+            android:theme="@style/FullScreenTheme"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,25 +31,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:theme="@style/FullScreenTheme"
-            android:name=".LoginActivity">
-        </activity>
+            android:name=".LoginActivity"
+            android:theme="@style/FullScreenTheme"></activity>
         <activity
-            android:theme="@style/FullScreenTheme"
-            android:name=".SignupActivity">
-        </activity>
+            android:name=".SignupActivity"
+            android:theme="@style/FullScreenTheme"></activity>
         <activity
             android:name=".SearchActivity"
-            android:theme="@style/ChipTheme">
-
-        </activity>
+            android:theme="@style/ChipTheme"></activity>
         <activity
-            android:theme="@style/ChipTheme"
-            android:name=".AddActivity">
-        </activity>
-            <meta-data
-                android:name="com.naver.maps.map.CLIENT_ID"
-                android:value="610mz80mr9" />
-        <meta-data android:name="com.kakao.sdk.AppKey" android:value="002448364a9b04e2bdfdad9d74c9ce5a"/>
+            android:name=".AddActivity"
+            android:theme="@style/ChipTheme"></activity>
+
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="610mz80mr9" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="002448364a9b04e2bdfdad9d74c9ce5a" />
     </application>
+
 </manifest>

@@ -58,7 +58,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements MapView.MapViewEventListener, MapView.POIItemEventListener,MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener {
-    
+
     private final String URL = "https://dapi.kakao.com/";
     private final String API_KEY = "KakaoAK 5c2c8b4f5e2f6a5f1a1c673de30c7bf8";
 
@@ -153,6 +153,21 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                     Intent intent = result.getData();
                     int CallType = intent.getIntExtra("CallType", 0);
                     if (CallType == 0) {
+                        mapViewContainer.removeView(mapView);
+                        MapView mapView = new MapView(MainActivity.this);
+
+                        mapView.setMapViewEventListener(MainActivity.this);
+                        mapView.setPOIItemEventListener(MainActivity.this);
+                        mapView.setCurrentLocationEventListener(MainActivity.this);
+                        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+                        mapView.setShowCurrentLocationMarker(true);
+                        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+                        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
+                        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
+
+                        mapViewContainer.addView(mapView);
+
+
                         Log.d("return to Activity", "Returns");
                         ArrayList<String> addressList = intent.getStringArrayListExtra("address");
 
@@ -163,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                             searchResultMarker = null;
                         }
                         searchResultMarker = new ArrayList<>();
-
+                        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving);
                         for (int i = 0; i < addressList.size(); ++i) {
                             double lat, lon;
                             try {
@@ -172,6 +187,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                     Address address = list.get(0);
                                     lat = address.getLatitude();
                                     lon = address.getLongitude();
+
+                                    if(i == 0) {
+                                        currentLocation = MapPoint.mapPointWithGeoCoord(lat, lon);
+                                    }
 
                                     MapPOIItem newPin = new MapPOIItem();
                                     newPin.setItemName("Custom Marker");
@@ -190,7 +209,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                                 e.printStackTrace();
                             }
                         }
-                        mapView.addPOIItems(searchResultMarker.toArray(new MapPOIItem[0]));
+                        if(addressList.size() > 0) {
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(currentLocation);
+                            mapView.moveCamera(cameraUpdate);
+                            mapView.addPOIItems(searchResultMarker.toArray(new MapPOIItem[0]));
+                        }
                     } else if(CallType == 1) {
                         x = intent.getExtras().getString("x");
                         y = intent.getExtras().getString("y");
