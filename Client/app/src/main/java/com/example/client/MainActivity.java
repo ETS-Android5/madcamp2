@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +37,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.navigation.NavigationView;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.CameraUpdate;
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private Retrofit retrofit;
     private RecyclerView imageRecyclerview;
     private ImageSearchAdapter imagesearchAdapter;
+    private int isSignin;
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -101,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         setContentView(R.layout.activity_main);
 
         checkPermissions();
+
+        isSignin = 1;
 
         pinAddress = (TextView) findViewById(R.id.PinAddress);
 
@@ -130,6 +136,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 drawerLayout.openDrawer(drawerView);
             }
         });
+
+
 
         search = (Button) findViewById(R.id.search);
         search.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +233,14 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newMapPoint(mp);
                         mapView.moveCamera(cameraUpdate);
                         mapView.addPOIItem(searchEngineMarker);
+                    } else if (CallType == 2){
+                        isSignin = intent.getExtras().getInt("signin_state");
+
+                        NoLoginSideMenuFragment fragment = new NoLoginSideMenuFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("signin_state", 0 );
+                        fragment.setArguments(bundle);
+
                     }
                 }
             }
@@ -263,14 +279,22 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
 
         @Override
         public void onDrawerOpened(@NonNull View drawerView) {
-            toLogin = (Button) findViewById(R.id.to_login);
-            toLogin.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(intent_to_login);
-                }
-            });
+            if(isSignin == 1) {
+                toLogin = (Button) findViewById(R.id.to_login);
+                toLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        Intent intent_to_login = new Intent(MainActivity.this, LoginActivity.class);
+                        resultLauncher.launch(intent_to_login);
+
+                    }
+                });
+            } else
+            {
+
+            }
         }
 
         @Override

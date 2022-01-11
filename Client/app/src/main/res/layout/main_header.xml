@@ -8,9 +8,10 @@
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <Button
-        android:id="@+id/to_login"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/userStateContainerview"
+        android:name="com.example.client.NoLoginSideMenuFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="로그인" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>
