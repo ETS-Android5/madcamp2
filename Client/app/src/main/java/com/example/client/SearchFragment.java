@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,7 @@ public class SearchFragment extends Fragment {
     private String address, city, county, last;
 
     private TextView addressText;
-    private Button querySendBtn, addressChangeBtn;
+    private ImageButton querySendBtn, addressChangeBtn;
     private ChipGroup chipGroupSight, chipGroupTaste, chipGroupTouch;
     private Chip chip;
 
@@ -149,8 +150,8 @@ public class SearchFragment extends Fragment {
 
         Log.d("FragmentLifeCycle", "setViewsById");
         addressText = (TextView)view.findViewById(R.id.searchAddressTextView);
-        querySendBtn = (Button)view.findViewById(R.id.sendSearchQueryBtn);
-        addressChangeBtn = (Button)view.findViewById(R.id.searchAddressChangeBtn);
+        querySendBtn = (ImageButton)view.findViewById(R.id.sendSearchQueryBtn);
+        addressChangeBtn = (ImageButton)view.findViewById(R.id.searchAddressChangeBtn);
         chipGroupSight = (ChipGroup)view.findViewById(R.id.chipGroupSearchSight);
         chipGroupTouch = (ChipGroup)view.findViewById(R.id.chipGroupSearchTouch);
         chipGroupTaste = (ChipGroup)view.findViewById(R.id.chipGroupSearchTaste);

@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private RecyclerView imageRecyclerview;
     private ImageSearchAdapter imagesearchAdapter;
     private int isSignin;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction transaction;
+    private LoginSideMenuFragment loginSideMenuFragment;
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -105,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         setContentView(R.layout.activity_main);
 
         checkPermissions();
+        LoginSideMenuFragment fragment2 = new LoginSideMenuFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putString("username","safd");
+        fragment2.setArguments(bundle2);
 
         isSignin = 1;
 
@@ -143,14 +150,19 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
-                Log.d("Current", currentAddress);
-                intent_to_search.putExtra("current", currentAddress);
-                intent_to_search.putExtra("x", Double.toString(currentLocation.getMapPointGeoCoord().longitude));
-                intent_to_search.putExtra("y", Double.toString(currentLocation.getMapPointGeoCoord().latitude));
-                resultLauncher.launch(intent_to_search);
-                // startActivity(intent_to_search);
-                overridePendingTransition(R.anim.fadein, R.anim.none);
+                if(currentAddress == null)
+                {
+                    Toast.makeText(getApplicationContext(),"사용자 위치를 불러오는 중입니다.",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent_to_search = new Intent(MainActivity.this, SearchActivity.class);
+                    Log.d("Current", currentAddress);
+                    intent_to_search.putExtra("current", currentAddress);
+                    intent_to_search.putExtra("x", Double.toString(currentLocation.getMapPointGeoCoord().longitude));
+                    intent_to_search.putExtra("y", Double.toString(currentLocation.getMapPointGeoCoord().latitude));
+                    resultLauncher.launch(intent_to_search);
+                    // startActivity(intent_to_search);
+                    overridePendingTransition(R.anim.fadein, R.anim.none);
+                }
             }
         });
 
@@ -257,12 +269,22 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                         mapView.moveCamera(cameraUpdate);
                         mapView.addPOIItem(searchEngineMarker);
                     } else if (CallType == 2){
+                        String username;
+
+                        username = intent.getExtras().getString("username");
                         isSignin = intent.getExtras().getInt("signin_state");
 
                         NoLoginSideMenuFragment fragment = new NoLoginSideMenuFragment();
                         Bundle bundle = new Bundle();
                         bundle.putInt("signin_state", 0 );
                         fragment.setArguments(bundle);
+
+
+
+                        loginSideMenuFragment = new LoginSideMenuFragment();
+                        fragmentManager = getSupportFragmentManager();
+                        transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.userStateContainerview, loginSideMenuFragment).commitAllowingStateLoss();
 
                     }
                 }
@@ -489,8 +511,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
         currentLocation = mapPoint;
-        mapCurrentGeoCoder = new MapReverseGeoCoder(APPKEY, currentLocation, this, this);
-        mapCurrentGeoCoder.startFindingAddress();
+        //mapCurrentGeoCoder = new MapReverseGeoCoder(APPKEY, currentLocation, this, this);
+        //mapCurrentGeoCoder.startFindingAddress();
 
     }
 

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class AddActivity extends AppCompatActivity {
     private String pointAddress, city, county, last;
 
     private TextView addressText;
-    private Button reviewSendBtn;
+    private ImageButton reviewSendBtn;
     private ChipGroup chipGroupSight, chipGroupTaste, chipGroupTouch;
     private Chip chip;
 
@@ -54,7 +55,7 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_information);
 
         addressText = (TextView) findViewById(R.id.reviewAddressTextView);
-        reviewSendBtn = (Button) findViewById(R.id.sendReviewBtn);
+        reviewSendBtn = (ImageButton) findViewById(R.id.sendReviewBtn);
         pointAddress = getIntent().getExtras().getString("pointAdress");
         String[] splits = pointAddress.split("\\s", 3);
         city = splits[0];

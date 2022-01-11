@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                             intent_to_main.putExtra("CallType",2);
                             intent_to_main.putExtra("signin_state",0);
                             intent_to_main.putExtra("id",id);
+                            intent_to_main.putExtra("username",nameEditText.getText().toString());
 
 
 
