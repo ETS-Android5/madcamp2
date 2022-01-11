@@ -57,7 +57,7 @@
         android:id="@+id/logInPasswordEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="30dp"
         android:hint="password"

@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
-        
+
         checkPermissions();
         LoginSideMenuFragment fragment2 = new LoginSideMenuFragment();
         Bundle bundle2 = new Bundle();
