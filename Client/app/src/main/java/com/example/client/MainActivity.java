@@ -21,6 +21,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
     private LoginSideMenuFragment loginSideMenuFragment;
+    private MapView mapView;
+    private ViewGroup mapViewContainer;
 
     public static final int MULTIPLE_PERMISSIONS = 1801;
     private String[] permissions = {
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_main);
-
+        
         checkPermissions();
         LoginSideMenuFragment fragment2 = new LoginSideMenuFragment();
         Bundle bundle2 = new Bundle();
@@ -107,20 +110,9 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         isSignin = 1;
 
         pinAddress = (TextView) findViewById(R.id.PinAddress);
+        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
 
-        MapView mapView = new MapView(this);
-        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-
-        mapView.setMapViewEventListener(this);
-        mapView.setPOIItemEventListener(this);
-        mapView.setCurrentLocationEventListener(this);
-        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-        mapView.setShowCurrentLocationMarker(true);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
-        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
-
-        mapViewContainer.addView(mapView);
+        setMapView();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.mainLayout);
         drawerView = (View) findViewById((R.id.drawerView));
@@ -157,24 +149,11 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
         resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                setMapView();
                 if (result.getResultCode() == RESULT_OK) {
                     Intent intent = result.getData();
                     int CallType = intent.getIntExtra("CallType", 0);
                     if (CallType == 0) {
-                        mapViewContainer.removeView(mapView);
-                        MapView mapView = new MapView(MainActivity.this);
-
-                        mapView.setMapViewEventListener(MainActivity.this);
-                        mapView.setPOIItemEventListener(MainActivity.this);
-                        mapView.setCurrentLocationEventListener(MainActivity.this);
-                        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
-                        mapView.setShowCurrentLocationMarker(true);
-                        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-                        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
-                        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
-
-                        mapViewContainer.addView(mapView);
-
                         ArrayList<String> addressList = intent.getStringArrayListExtra("address");
 
                         if (searchResultMarker != null) {
@@ -272,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
             }
         });
 
-
-
         toCurrentLocation =(ImageButton) findViewById(R.id.currentLocationButton);
         toCurrentLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,6 +272,26 @@ public class MainActivity extends AppCompatActivity implements MapView.MapViewEv
                 mapView.removeAllPOIItems();
             }
         });
+    }
+
+    private void setMapView() {
+        if(mapView != null) {
+            //mapViewContainer.removeView(mapView);
+            mapViewContainer.removeAllViews();
+            mapView = null;
+        }
+        mapView = new MapView(this);
+
+        mapView.setMapViewEventListener(this);
+        mapView.setPOIItemEventListener(this);
+        mapView.setCurrentLocationEventListener(this);
+        mapView.setCalloutBalloonAdapter(new CustomCalloutBalloonAdapter());
+        mapView.setShowCurrentLocationMarker(true);
+        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
+        mapView.setCustomCurrentLocationMarkerDirectionImage(R.drawable.direction, new MapPOIItem.ImageOffset(30, -6));
+
+        mapViewContainer.addView(mapView);
     }
 
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
