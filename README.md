@@ -21,6 +21,7 @@ reviewing the world only use 3-sense
 ## 4. Member Account
 <p>
     <img src="./image/gif/1.gif" width="30%">
+    <img src="./image/gif/2.gif" width="30%">
 </p>
 <p></p>
 어플을 사용하기 위해서는 회원가입이 필요합니다.   
@@ -62,7 +63,8 @@ Django의 회원 관리 라이브러리인 "rest-auth"를 사용해 구현했습
 그러나 사용자에게 원할한 리뷰와 정보 제공을 위해    
 단어 선택에서 제한을 두고 있습니다.   
 <p>
-    <img src="./image/gif/2.gif" width="30%">
+    <img src="./image/gif/3.gif" width="30%">
+    <img src="./image/gif/4.gif" width="30%">
 </p>
 <p></p>
 선택 가능한 단어는 감각 표현입니다.   
@@ -116,7 +118,8 @@ override 해 새로 정의할 필요가 있었습니다.
 
 ## 6. Sense Search
 <p>
-    <img src="./image/gif/3.gif" width="30%">
+    <img src="./image/gif/5.gif" width="30%">
+    <img src="./image/gif/6.gif" width="30%">
 </p>
 <p></p>
 요청한 감각 선택에 따라 현재의 위치 주위에 있는 지역을 추천합니다.   
