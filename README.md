@@ -15,7 +15,7 @@ reviewing the world only use 3-sense
 - Server : Backend server which made by "Django"   
 
 ## 3. Applications
-4만 개의 단어 중 3단어의 조합으로 주소를 나타내는 주소 체계 "W3W"에서 아이디어를 착안해      
+4만 개의 단어 중 3단어의 조합으로 주소를 나타내는 주소 체계 "[W3W](https://what3words.com/%EB%B9%84%ED%96%89.%EC%A4%91%EC%A7%80.%ED%8B%B0%EC%8A%88)"에서 아이디어를 착안해      
 각종 식당이나 카페, 시설 등을 오로지 3가지의 단어로만 리뷰해 등록하는 어플을 제작했습니다.       
 
 ## 4. Member Account
