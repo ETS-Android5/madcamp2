@@ -21,6 +21,7 @@ public class NoLoginSideMenuFragment extends Fragment {
     private LoginSideMenuFragment loginSideMenuFragment;
     private NoLoginSideMenuFragment noLoginSideMenuFragment;
     private int signin_state;
+    private String username;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,20 +37,32 @@ public class NoLoginSideMenuFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_no_login_state, container, false);
 
-        if(getArguments() != null) {
+
+
+        return view;
+    }
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        if (getArguments() != null) {
             signin_state = getArguments().getInt("signin_state");
+            username = getArguments().getString("username");
             if (signin_state == 0) {
-                Log.e("사이드 헤더 상태","로그인");
+                Log.e("사이드 헤더 상태", "로그인");
                 loginSideMenuFragment = new LoginSideMenuFragment();
                 fragmentManager = getActivity().getSupportFragmentManager();
                 transaction = fragmentManager.beginTransaction();
+                LoginSideMenuFragment fragment = new LoginSideMenuFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username", username);
+                fragment.setArguments(bundle);
                 transaction.replace(R.id.userStateContainerview, loginSideMenuFragment).commitAllowingStateLoss();
             }
-        }else
-        {
-            Log.e("번들","전달실패");
+        } else {
+            Log.e("번들 n", "전달실패");
         }
 
-        return view;
     }
 }
