@@ -31,9 +31,9 @@ public class GetPointFromMapActivity extends AppCompatActivity {
         mapView = new MapView(this);
         mapViewContainer = (ViewGroup) findViewById(R.id.getCenterMapView);
 
-        mapView.setShowCurrentLocationMarker(true);
-        mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
-        mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
+        //mapView.setShowCurrentLocationMarker(true);
+        //mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading);
+        //mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_location_marker, new MapPOIItem.ImageOffset(30, 30));
 
         mapViewContainer.addView(mapView);
 
@@ -45,6 +45,9 @@ public class GetPointFromMapActivity extends AppCompatActivity {
                 mMapReverseGeoCoder = new MapReverseGeoCoder(APPKEY, point, new MapReverseGeoCoder.ReverseGeoCodingResultListener() {
                     @Override
                     public void onReverseGeoCoderFoundAddress(MapReverseGeoCoder mapReverseGeoCoder, String s) {
+
+                        mapViewContainer.removeView(mapView);
+
                         Intent intent = new Intent();
                         intent.putExtra("Address", s);
 

@@ -132,6 +132,7 @@ public class AddActivity extends AppCompatActivity {
                     public void onResponse(Call<Review> call, Response<Review> response) {
                         if(response.isSuccessful()) {
                             Toast.makeText(AddActivity.this, "Area Add Success", Toast.LENGTH_SHORT);
+                            finish();
                         } else {
                             Toast.makeText(AddActivity.this, "Area Add Fail", Toast.LENGTH_SHORT);
                             try {

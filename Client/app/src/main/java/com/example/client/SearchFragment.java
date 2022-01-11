@@ -86,10 +86,12 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void onResponse(Call<Review> call, Response<Review> response) {
                         if(response.isSuccessful()) {
+                            Log.d("Address Response", "Now get response!");
                             List<Area> result = response.body().getResult();
                             ArrayList<String> addressList = new ArrayList<>();
                             for(int i= 0; i < result.size(); ++i) {
                                 addressList.add(result.get(i).getAddress());
+                                Log.d("Address List", addressList.get(i));
                             }
                             Intent intent = new Intent();
                             intent.putExtra("CallType", 0);
