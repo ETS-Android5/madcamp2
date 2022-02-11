@@ -154,7 +154,7 @@ RecyclerView item 을 클릭하면 해당 item 의 지도상 좌표를 MapView �
 
 ## 8. License
 ```
-    Copyright [2021] [BUYA-GH, hye1ee]
+    Copyright [2021] [BUYA-GH, qsenn]
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
